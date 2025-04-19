@@ -1,0 +1,32 @@
+server:
+  port: 8181
+  servlet:
+    context-path: /poops
+
+spring:
+  application:
+    name: Poops
+
+  datasource:
+    uri: jdbc:mysql://localhost:3306/poops
+    username: root
+
+  mail:
+    from: upinmc123@gmail.com
+    host: smtp.gmail.com
+    port: 587
+    username: upinmc123
+    password: fczfnxqdcyziezzu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+jwt:
+  accessKey: "hPYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
+  refreshKey: "PYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
+  accessExpiryMinutes: 1800000   # 30 phut
+  refreshExpiryMinutes: 43200000   # 30 ngay
