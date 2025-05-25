@@ -1,12 +1,12 @@
-package init.upinmcse.backend.dto;
+package init.upinmcse.backend.dto.response;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtResponse {
     String accessToken;

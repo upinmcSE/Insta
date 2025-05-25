@@ -1,4 +1,4 @@
-package init.upinmcse.backend.dto;
+package init.upinmcse.backend.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

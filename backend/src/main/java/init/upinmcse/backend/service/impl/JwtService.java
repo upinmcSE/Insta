@@ -1,6 +1,5 @@
 package init.upinmcse.backend.service.impl;
 
-import init.upinmcse.backend.enums.RoleType;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.UserRepository;
@@ -14,20 +13,20 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j(topic = "JwtService")
 public class JwtService implements IJwtService {
     UserRepository userRepository;
 
@@ -54,18 +53,23 @@ public class JwtService implements IJwtService {
         claims.put("id", UUID.randomUUID().toString());
         claims.put("fullName", user.getFullName());
         claims.put("enabled", user.isEnabled());
-        RoleType role = user.getRole();
-        if (role != null) {
-            claims.put("role", role.name());
-        }
-
-        String jit = UUID.randomUUID().toString();
-        return createToken(claims, email, typeToken, jit);
+        claims.put("scope", buildScope(user));
+        return createToken(claims, email, typeToken);
     }
 
-    private String createToken(Map<String, Object> claims, String email, TYPE_TOKEN typeToken, String jit) {
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+            });
+
+        return stringJoiner.toString();
+    }
+
+    private String createToken(Map<String, Object> claims, String email, TYPE_TOKEN typeToken) {
         return Jwts.builder()
-                .setId(jit)
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuer("U-Poops")
@@ -109,7 +113,7 @@ public class JwtService implements IJwtService {
 
 
     public String extractId(String token, TYPE_TOKEN typeToken) {
-        return extractClaims(token, typeToken, Claims::getId);
+        return extractClaims(token, typeToken, claims -> claims.get("id", String.class));
     }
 
 
@@ -124,6 +128,7 @@ public class JwtService implements IJwtService {
 
     public Boolean validateToken(String token, TYPE_TOKEN typeToken, UserDetails userDetails) {
         final String username = extractEmail(token, typeToken);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token, typeToken));
+        return (
+                username.equals(userDetails.getUsername()) && !isTokenExpired(token, typeToken));
     }
 }

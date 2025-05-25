@@ -1,11 +1,13 @@
 package init.upinmcse.backend.model;
 
+import init.upinmcse.backend.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -14,12 +16,12 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "comments")
-public class Comment {
-
+@Table(name = "tb_comment")
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "comment_id")
+    Long id;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -30,7 +32,19 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Post postId;
+    private Post post;
+
+    @OneToMany(
+            mappedBy = "comment",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<RepComment> repComments;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    Status status;
 
     @Column(name = "created_at", updatable = false)
     @CreatedDate

@@ -1,4 +1,4 @@
-package init.upinmcse.backend.dto;
+package init.upinmcse.backend.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

@@ -1,6 +1,8 @@
 package init.upinmcse.backend.service.impl;
 
-import init.upinmcse.backend.enums.RoleType;
+import init.upinmcse.backend.exception.ErrorCode;
+import init.upinmcse.backend.exception.ErrorException;
+import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.UserRepository;
 import lombok.AccessLevel;
@@ -12,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +28,10 @@ public class UserSecurityService implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username).orElseThrow();
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                roleToAuthority(user.getRole()));
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByEmail(username).orElseThrow(
+                () -> new ErrorException(ErrorCode.NOT_FOUND_USER)
+        );
     }
 
-    private Collection<? extends GrantedAuthority> roleToAuthority(RoleType role){
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
 }

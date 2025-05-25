@@ -1,12 +1,15 @@
 package init.upinmcse.backend.service.impl;
 
-import init.upinmcse.backend.dto.*;
+import init.upinmcse.backend.constant.PredefinedRole;
+import init.upinmcse.backend.dto.request.*;
+import init.upinmcse.backend.dto.response.JwtResponse;
 import init.upinmcse.backend.enums.GENDER;
-import init.upinmcse.backend.enums.RoleType;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
+import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
+import init.upinmcse.backend.repository.RoleRepository;
 import init.upinmcse.backend.repository.UserRepository;
 import init.upinmcse.backend.service.IAuthService;
 import jakarta.mail.MessagingException;
@@ -19,12 +22,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +37,11 @@ import java.time.LocalDateTime;
 @Slf4j
 public class AuthService implements IAuthService {
     UserRepository userRepository;
+    RoleRepository roleRepository;
     MailService mailService;
     PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
     JwtService jwtService;
-
 
 
     private static String generateCode() {
@@ -52,15 +57,21 @@ public class AuthService implements IAuthService {
     public void register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
         if (existedUser) {
-            log.error("Kiểm tra xem tài khoản đã kích hoạt chưa");
+            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+            if (user.isEnabled()) {
+                throw new ErrorException(ErrorCode.USER_ALREADY_EXISTS);
+            }
         }
 
         String code = generateCode();
 
+        Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
+                .orElseThrow(() -> new ErrorException(ErrorCode.ROLE_NOT_FOUND));
+
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(RoleType.USER)
+                .roles(Set.of(role))
                 .enabled(false)
                 .gender(GENDER.OTHER)
                 .verifyCode(passwordEncoder.encode(code))
@@ -91,9 +102,8 @@ public class AuthService implements IAuthService {
                             request.getPassword()
                     )
             );
-
+            log.info("Authentication: {}", authentication);
             if (authentication.isAuthenticated()) {
-                // Nếu xác thực thành công, lưu thông tin vào SecurityContext
                 String accessToken = jwtService.generateToken(request.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
                 String refreshToken = jwtService.generateToken(request.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
                 return JwtResponse.builder()
@@ -108,14 +118,25 @@ public class AuthService implements IAuthService {
         throw new ErrorException(ErrorCode.UNAUTHENTICATED);
     }
 
-    @Override
-    public void logout(String token) {
-
-    }
 
     @Override
-    public JwtResponse refreshToken(String token) {
-        return null;
+    public JwtResponse refreshToken(RefreshRequest request) {
+        String refreshToken = request.getRefreshToken();
+        String email = jwtService.extractEmail(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
+        if (email != null) {
+            User user = userRepository.findByEmail(email).orElseThrow();
+            if (!user.isEnabled()) {
+                throw new ErrorException(ErrorCode.USER_NOT_ACTIVATED);
+            }
+            String accessToken = jwtService.generateToken(email, TYPE_TOKEN.ACCESS_TOKEN);
+        }else{
+            throw new ErrorException(ErrorCode.INVALID_TOKEN);
+        }
+        return JwtResponse.builder()
+                .accessToken(jwtService.generateToken(email, TYPE_TOKEN.ACCESS_TOKEN))
+                .refreshToken(refreshToken)
+                .build();
+
     }
 
     @Override
@@ -159,7 +180,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void resetPassword(ResetPassword request) {
+    public void resetPassword(ResetPasswordRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         if (passwordEncoder.matches(request.getCode(), user.getVerifyCode())
                 && !user.getVerifyExpired().isBefore(LocalDateTime.now())) {

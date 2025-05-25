@@ -1,4 +1,4 @@
-package init.upinmcse.backend.dto;
+package init.upinmcse.backend.dto.request;
 
 import init.upinmcse.backend.validator.PasswordConstraint;
 import jakarta.validation.constraints.Email;
@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResetPassword {
+public class ResetPasswordRequest {
     @Email(message = "Sai định dạng email")
     String email;
 

@@ -1,6 +1,6 @@
 package init.upinmcse.backend.exception;
 
-import init.upinmcse.backend.dto.BaseResponse;
+import init.upinmcse.backend.dto.common.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     ResponseEntity<BaseResponse> handleGenericException(Exception exception) {
         BaseResponse response = new BaseResponse<>();
-        response.setMessage("Đã xảy ra lỗi hệ thống");
+        response.setMessage(exception.getMessage());
 
         // Log lỗi chi tiết để debug
         log.error("Unexpected error", exception);

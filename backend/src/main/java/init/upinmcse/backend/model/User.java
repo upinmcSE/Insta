@@ -2,27 +2,35 @@ package init.upinmcse.backend.model;
 
 
 import init.upinmcse.backend.enums.GENDER;
-import init.upinmcse.backend.enums.RoleType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
-
+@Slf4j(topic = "UserEntity")
+@Entity
+@Table(name = "tb_user")
+public class User extends BaseEntity implements UserDetails, Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
+    private String id;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -34,20 +42,14 @@ public class User {
     private String fullName;
 
     @Column(name = "dob")
-    private LocalDateTime dob;
+    private LocalDate dob;
 
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private GENDER gender;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private RoleType role;
-
-    @Column(name = "avt_url")
     private String avtUrl;
 
-    @Column(name = "profile_url")
     private String profileUrl;
 
     @Column(name = "bio")
@@ -62,19 +64,44 @@ public class User {
     @Column(name = "verify_expired")
     private LocalDateTime verifyExpired;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_followers",
-            joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id")
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<User> followers = new HashSet<>();
+    Set<Role> roles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_following",
-            joinColumns = @JoinColumn(name = "following_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id")
-    )
-    private Set<User> following = new HashSet<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<String> roleList = roles.stream()
+                .map(role -> "ROLE_" + role.getName())
+                .toList();
+
+        return roleList.stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
 }
