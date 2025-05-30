@@ -24,11 +24,11 @@ spring:
     show-sql: true
 
   mail:
-    from: upinmc123@gmail.com
+    from: #
     host: smtp.gmail.com
     port: 587
     username: upinmc123
-    password: fczfnxqdcyziezzu
+    password: #
     properties:
       mail:
         smtp:
