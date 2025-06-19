@@ -54,12 +54,4 @@ public class Post extends BaseEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     Status status;
-
-    @Column(name = "created_at", updatable = false)
-    @CreatedDate
-    Date createdAt;
-
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    Date updatedAt;
 }

@@ -15,9 +15,11 @@ public interface FollowerRepository extends JpaRepository<UserFollowing, Integer
     boolean existsByFollowerUserIdAndFollowingUserId(String followerUserId, String followingUserId);
 
     Optional<UserFollowing> findByFollowerUserIdAndFollowingUserId(String followerUserId, String followingUserId);
-    @Query("SELECT uf FROM UserFollowing uf WHERE uf.followerUserId = :followerUserId")
-    List<UserFollowing> findByFollowerUserId(@Param("followerUserId") String followerUserId);
 
-    @Query("SELECT uf FROM UserFollowing uf WHERE uf.followingUserId = :followingUserId")
-    List<UserFollowing> findByFollowingUserId(@Param("followingUserId") String followingUserId);
+    @Query("SELECT uf.followingUserId FROM UserFollowing uf WHERE uf.followerUserId = :followerUserId")
+    List<String> findFollowingUserIdsByFollowerUserId(@Param("followerUserId") String followerUserId);
+
+
+    @Query("SELECT uf.followerUserId FROM UserFollowing uf WHERE uf.followingUserId = :followingUserId")
+    List<String> findFollowerUserIdsByFollowingUserId(@Param("followingUserId") String followingUserId);
 }

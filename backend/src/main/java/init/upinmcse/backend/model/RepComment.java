@@ -36,11 +36,4 @@ public class RepComment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     Status status;
 
-    @Column(name = "created_at", updatable = false)
-    @CreatedDate
-    private Date createdAt;
-
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private Date updatedAt;
 }

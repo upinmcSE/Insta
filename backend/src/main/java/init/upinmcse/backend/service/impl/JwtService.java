@@ -51,7 +51,7 @@ public class JwtService implements IJwtService {
         Map<String, Object> claims = new HashMap<>();
         User user = userRepository.findByEmail(email).orElseThrow();
         claims.put("id", UUID.randomUUID().toString());
-        claims.put("fullName", user.getFullName());
+        claims.put("fullName", user.getUserProfile().getFullName());
         claims.put("enabled", user.isEnabled());
         claims.put("scope", buildScope(user));
         return createToken(claims, email, typeToken);

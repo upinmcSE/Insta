@@ -1,6 +1,6 @@
 package init.upinmcse.backend.controller;
 
-import init.upinmcse.backend.service.impl.FileService;
+import init.upinmcse.backend.service.IFileService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequestMapping("/api/v1/files")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FileController {
-    FileService fileService;
+    IFileService fileService;
 
     @GetMapping("/media/download/{fileName}")
     ResponseEntity<Resource> downloadMedia(@PathVariable String fileName) throws IOException, IOException {

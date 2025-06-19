@@ -5,5 +5,5 @@ import init.upinmcse.backend.dto.response.PostResponse;
 
 public interface IFeedService {
     PageResponse<PostResponse> getGlobalFeed(int page, int size);
-    PageResponse<PostResponse> getFollowingFeed(int page, int size);
+    PageResponse<PostResponse> getFollowingFeed(int page, int size, String userId);
 }

@@ -49,19 +49,13 @@ public class UserService implements IUserService {
         return UserResponse.builder()
                         .id(user.getId())
                         .email(user.getEmail())
-                        .fullName(user.getFullName())
-                        .bio(user.getBio())
-                        .dob(user.getDob())
-                        .gender(user.getGender())
-                        .avtUrl(getUserImages(user.getId()).get(0))
-                        .profileUrl(getUserImages(user.getId()).get(1))
-//                        .roles(user.getRoles().stream()
-//                                .map(Role::getName)
-//                                .toList())
-                        .followers(followerRepository.findByFollowerUserId(user.getId()).stream().map(
-                                UserFollowing::getFollowerUserId).toList())
-                        .following(followerRepository.findByFollowingUserId(user.getId()).stream().map(
-                                UserFollowing::getFollowingUserId).toList())
+                        .fullName(user.getUserProfile().getFullName())
+                        .bio(user.getUserProfile().getBio())
+                        .dob(user.getUserProfile().getDob())
+                        .gender(user.getUserProfile().getGender())
+                        .avtUrl(getUserImage(user.getId()))
+                .followers(followerRepository.findFollowingUserIdsByFollowerUserId(user.getId()))
+                .following(followerRepository.findFollowerUserIdsByFollowingUserId(user.getId()))
                         .build();
     }
 
@@ -73,16 +67,13 @@ public class UserService implements IUserService {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .fullName(user.getFullName())
-                .bio(user.getBio())
-                .dob(user.getDob())
-                .gender(user.getGender())
-                .avtUrl(getUserImages(user.getId()).get(0))
-                .profileUrl(getUserImages(user.getId()).get(1))
-                .followers(followerRepository.findByFollowerUserId(user.getId()).stream().map(
-                        UserFollowing::getFollowerUserId).toList())
-                .following(followerRepository.findByFollowingUserId(user.getId()).stream().map(
-                        UserFollowing::getFollowingUserId).toList())
+                .fullName(user.getUserProfile().getFullName())
+                .bio(user.getUserProfile().getBio())
+                .dob(user.getUserProfile().getDob())
+                .gender(user.getUserProfile().getGender())
+                .avtUrl(getUserImage(user.getId()))
+                .followers(followerRepository.findFollowingUserIdsByFollowerUserId(user.getId()))
+                .following(followerRepository.findFollowerUserIdsByFollowingUserId(user.getId()))
                 .build();
     }
 
@@ -92,26 +83,25 @@ public class UserService implements IUserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-        user.setFullName(request.getFullName());
-        user.setBio(request.getBio());
-        user.setDob(request.getDob());
-        user.setGender(GENDER.valueOf(request.getGender().toUpperCase()));
-        userRepository.saveAndFlush(user);
-
-        return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .bio(user.getBio())
-                .dob(user.getDob())
-                .gender(user.getGender())
-                .avtUrl(getUserImages(user.getId()).get(0))
-                .profileUrl(getUserImages(user.getId()).get(1))
-                .followers(followerRepository.findByFollowerUserId(user.getId()).stream().map(
-                        UserFollowing::getFollowerUserId).toList())
-                .following(followerRepository.findByFollowingUserId(user.getId()).stream().map(
-                        UserFollowing::getFollowingUserId).toList())
-                .build();
+//        user.setFullName(request.getFullName());
+//        user.setBio(request.getBio());
+//        user.setDob(request.getDob());
+//        user.setGender(GENDER.valueOf(request.getGender().toUpperCase()));
+//        userRepository.saveAndFlush(user);
+//
+//        return UserResponse.builder()
+//                .id(user.getId())
+//                .email(user.getEmail())
+//                .fullName(user.getFullName())
+//                .bio(user.getBio())
+//                .dob(user.getDob())
+//                .gender(user.getGender())
+//                .avtUrl(getUserImages(user.getId()).get(0))
+//                .profileUrl(getUserImages(user.getId()).get(1))
+//                .followers(followerRepository.findFollowingUserIdsByFollowerUserId(user.getId()))
+//                .following(followerRepository.findFollowerUserIdsByFollowingUserId(user.getId()))
+//                .build();
+        return null;
     }
 
     @Override
@@ -119,10 +109,6 @@ public class UserService implements IUserService {
         return null;
     }
 
-    @Override
-    public String changeProfileImage(MultipartFile file) {
-        return null;
-    }
 
     @Transactional
     @Override
@@ -198,22 +184,23 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserResponse> getFollowers(String userId) {
-       User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-
-        List<UserFollowing> followers = followerRepository.findByFollowingUserId(user.getId());
-
-        return followers.stream()
-                .map(follower -> {
-                    User followedUser = userRepository.findById(follower.getFollowerUserId())
-                            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-                    return UserResponse.builder()
-                            .id(followedUser.getId())
-                            .avtUrl(getUserImages(followedUser.getId()).get(0))
-                            .fullName(followedUser.getFullName())
-                            .build();
-                })
-                .toList();
+//       User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
+//
+//        List<UserFollowing> followers = followerRepository.findByFollowingUserId(user.getId());
+//
+//        return followers.stream()
+//                .map(follower -> {
+//                    User followedUser = userRepository.findById(follower.getFollowerUserId())
+//                            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
+//                    return UserResponse.builder()
+//                            .id(followedUser.getId())
+//                            .avtUrl(getUserImages(followedUser.getId()).get(0))
+//                            .fullName(followedUser.getFullName())
+//                            .build();
+//                })
+//                .toList();
+        return  null;
     }
 
     @Override
@@ -221,37 +208,27 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
-        List<UserFollowing> following = followerRepository.findByFollowerUserId(user.getId());
-
-
-        return following.stream()
-                .map(followed -> {
-                    User followedUser = userRepository.findById(followed.getFollowingUserId())
-                            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-                    return UserResponse.builder()
-                            .id(followedUser.getId())
-                            .avtUrl(getUserImages(followedUser.getId()).get(0))
-                            .fullName(followedUser.getFullName())
-                            .build();
-                })
-                .toList();
+//        List<UserFollowing> following = followerRepository.findByFollowerUserId(user.getId());
+//
+//
+//        return following.stream()
+//                .map(followed -> {
+//                    User followedUser = userRepository.findById(followed.getFollowingUserId())
+//                            .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
+//                    return UserResponse.builder()
+//                            .id(followedUser.getId())
+//                            .avtUrl(getUserImages(followedUser.getId()).get(0))
+//                            .fullName(followedUser.getFullName())
+//                            .build();
+//                })
+//                .toList();
+        return  null;
     }
 
-    private List<String> getUserImages(String userId){
-        List<String> images = new ArrayList<>();
+    private String getUserImage(String userId){
 
-        String avtUrl = Optional.ofNullable(
+        return Optional.ofNullable(
                 fileRepository.findByFileTypeAndUserId(FileType.USER_AVATAR, userId)
         ).map(File::getPath).orElse(null); // hoặc orElse("default-avatar.png")
-
-        images.add(avtUrl);
-
-        String profileUrl = Optional.ofNullable(
-                fileRepository.findByFileTypeAndUserId(FileType.USER_PROFILE, userId)
-        ).map(File::getPath).orElse(null);
-
-        images.add(profileUrl);
-
-        return images;
     }
 }

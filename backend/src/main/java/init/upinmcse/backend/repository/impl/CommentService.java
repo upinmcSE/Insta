@@ -50,8 +50,8 @@ public class CommentService implements ICommentService {
                 .commentId(comment.getId())
                 .postId(post.getId())
                 .userId(user.getId())
-                .fullName(user.getFullName())
-                .avtUrl(user.getAvtUrl())
+                .fullName(user.getUserProfile().getFullName())
+                .avtUrl(user.getUserProfile().getAvtUrl())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .build();
@@ -92,8 +92,8 @@ public class CommentService implements ICommentService {
                 .commentId(comment.getId())
                 .content(repComment.getContent())
                 .userId(user.getId())
-                .fullName(user.getFullName())
-                .avtUrl(user.getAvtUrl())
+                .fullName(user.getUserProfile().getFullName())
+                .avtUrl(user.getUserProfile().getAvtUrl())
                 .build();
     }
 

@@ -13,7 +13,6 @@ public interface IUserService {
     UserResponse getProfile(String userId);
     UserResponse updateInfo(UpdateInfo request);
     String changeAvatar(MultipartFile file);
-    String changeProfileImage(MultipartFile file);
     void changePassword(ChangePasswordRequest request);
     void followUser(String userId);
     void unfollowUser(String userId);

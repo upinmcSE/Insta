@@ -15,7 +15,4 @@ public class ResetPasswordRequest {
 
     @PasswordConstraint(message = "Mật khẩu không hợp lệ")
     String newPassword;
-
-    @Size(min = 4, max = 4, message = "Mã xác nhận không hợp lệ")
-    String code;
 }

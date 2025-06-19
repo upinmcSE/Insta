@@ -2,6 +2,7 @@ package init.upinmcse.backend.model;
 
 
 import init.upinmcse.backend.enums.GENDER;
+import init.upinmcse.backend.enums.Status;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,31 +39,11 @@ public class User extends BaseEntity implements UserDetails, Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "full_name")
-    private String fullName;
-
-    @Column(name = "dob")
-    private LocalDate dob;
-
-    @Column(name = "gender")
     @Enumerated(EnumType.STRING)
-    private GENDER gender;
+    Status status;
 
-    private String avtUrl;
-
-    private String profileUrl;
-
-    @Column(name = "bio")
-    private String bio;
-
-    @Column(name = "enabled")
-    private boolean enabled;
-
-    @Column(name = "activation_code")
-    private String verifyCode;
-
-    @Column(name = "verify_expired")
-    private LocalDateTime verifyExpired;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserProfile userProfile;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -71,7 +52,6 @@ public class User extends BaseEntity implements UserDetails, Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     Set<Role> roles;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

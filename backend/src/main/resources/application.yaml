@@ -23,6 +23,21 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    stomp:
+      relay:
+        host: rabbitmq
+        port: 61613
+        login: guest
+        passcode: guest
+
   mail:
     from: upinmc123@gmail.com
     host: smtp.gmail.com

@@ -3,7 +3,8 @@ package init.upinmcse.backend.controller;
 import init.upinmcse.backend.dto.common.BaseResponse;
 import init.upinmcse.backend.dto.request.*;
 import init.upinmcse.backend.dto.response.JwtResponse;
-import init.upinmcse.backend.service.impl.AuthService;
+import init.upinmcse.backend.dto.response.RegisterResponse;
+import init.upinmcse.backend.service.IAuthService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -22,27 +23,18 @@ import java.io.UnsupportedEncodingException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
 
-    AuthService authenticationService;
+    IAuthService authenticationService;
 
     // UC-1: Register
     @PostMapping("/register")
-    public BaseResponse<Void> register(@Valid @RequestBody RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
-        authenticationService.register(request);
-        return BaseResponse.<Void>builder()
+    public BaseResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
+        return BaseResponse.<RegisterResponse>builder()
                 .message("Register successfully")
+                .result(authenticationService.register(request))
                 .build();
     }
 
-    // UC-2: Verify email
-    @PostMapping("/verify")
-    public BaseResponse<Void> verify(@Valid @RequestBody VerifyRequest request) {
-        authenticationService.verifyEmail(request);
-        return BaseResponse.<Void>builder()
-                .message("Verify successfully")
-                .build();
-    }
-
-    // UC-3: Login
+    // UC-2: Login
     @PostMapping("/login")
     public BaseResponse<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
         return BaseResponse.<JwtResponse>builder()
@@ -51,7 +43,7 @@ public class AuthController {
                 .build();
     }
 
-    // UC-4: Forgot password
+    // UC-3: Forgot password
     @PostMapping("/forgot-password")
     public BaseResponse<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         authenticationService.forgotPassword(request);
@@ -60,7 +52,16 @@ public class AuthController {
                 .build();
     }
 
-    // UC-5: Reset password
+    // UC-3.1: Verify email
+    @PostMapping("/verify")
+    public BaseResponse<Void> verify(@Valid @RequestBody VerifyRequest request) {
+        authenticationService.verifyEmail(request);
+        return BaseResponse.<Void>builder()
+                .message("Verify successfully")
+                .build();
+    }
+
+    // UC-3.2: Reset password
     @PostMapping("/reset-password")
     public BaseResponse<Void> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         authenticationService.resetPassword(request);
@@ -69,6 +70,7 @@ public class AuthController {
                 .build();
     }
 
+    // UC-4: Refresh token
     @PostMapping("/refresh-token")
     public BaseResponse<JwtResponse> refreshToken(@Valid @RequestBody RefreshRequest request) {
         return BaseResponse.<JwtResponse>builder()

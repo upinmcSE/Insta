@@ -1,4 +1,4 @@
-## I. Quy trình xác thực (Authentication Flow) trong Sydegram
+## I. Quy trình xác thực (Authentication Flow) trong Poops
 Để đảm bảo an toàn cho hệ thống và dữ liệu người dùng, Sydegram áp dụng một quy trình xác thực rõ ràng và chặt chẽ. Bài giảng này sẽ giúp bạn hiểu từng bước trong flow xác thực từ đăng ký, đăng nhập, sử dụng token, cho đến logout.
 
 ### 1. Đăng ký tài khoản (Register)
@@ -12,8 +12,7 @@ Server kiểm tra hợp lệ dữ liệu:
 
 - Password đủ mạnh
 
-Nếu thành công, server lưu thông tin vào database và trả về thông tin cơ bản của tài khoản vừa tạo.
-
+Nếu thành công, server gửi 1 mã xác thực đến email vừa đăng ký
 Nếu có lỗi, server trả về mã lỗi 400 hoặc 500 kèm thông báo chi tiết.
 
 Ví dụ Request:
@@ -30,14 +29,15 @@ Ví dụ Response:
 
 `
 {
-  "message": "User registered successfully",
-  "data": {
-    "user_id": 10,
-    "username": "newuser"
-  }
+  "message": "Hãy thực hiện xác thực",
 }
 `
-### 2. Đăng nhập (Login)
+
+### 2. Xác thực tài khoản (Verify)
+
+
+
+### 3. Đăng nhập (Login)
 Người dùng gửi username và password tới API /api/auth/login bằng phương thức POST.
 
 Server kiểm tra:
@@ -81,7 +81,7 @@ Ví dụ Response:
 }
 `
 
-### 3. Sử dụng Access Token để gọi API
+### 4. Sử dụng Access Token để gọi API
 Sau khi đăng nhập, mỗi lần gọi API cần đính kèm Access Token vào header:
 
 Authorization: Bearer <access_token>
@@ -92,7 +92,7 @@ Ví dụ: Request lấy hồ sơ cá nhân:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 Nếu token hợp lệ, server trả về thông tin người dùng. Nếu token sai hoặc hết hạn, server trả về 401 Unauthorized.
 
-### 4. Đăng xuất (Logout)
+### 5. Đăng xuất (Logout)
 Khi người dùng chọn "Logout", frontend sẽ gọi API /api/auth/logout bằng POST, kèm Access Token.
 
 Server xác nhận và trả về thông báo logout thành công.
@@ -111,7 +111,7 @@ Ví dụ Response:
 
 Sơ đồ tóm tắt flow xác thực
 
-`Đăng ký tài khoản ➔ 2. Đăng nhập ➔ 3. Nhận Access/Refresh Token ➔ 4. Gọi các API kèm Access Token ➔ 5. Logout và xoá token phía client.`
+`1. Đăng ký tài khoản ➔ 2.Xác thực tài khoản ➔ 3. Đăng nhập ➔ 4. Nhận Access/Refresh Token ➔ 5. Gọi các API kèm Access Token ➔ 6. Logout, ignore token phía server xoá token phía client.`
 
 Một số lưu ý bảo mật quan trọng:
 - Không trả về hoặc lưu password dưới dạng plain text.
@@ -122,7 +122,10 @@ Một số lưu ý bảo mật quan trọng:
 
 - Xác thực tất cả các API quan trọng, không dựa vào client-side logic.
 
-## II. User Endpoints
+## II. Quy trình lấy lại mật khẩu (Forgot password Flow)
+
+
+## III. User Endpoints
 
 Tất cả các API quản lý người dùng đều yêu cầu Access Token hợp lệ, được gửi thông qua header Authorization: Bearer <access_token>.
 
@@ -162,6 +165,7 @@ Ví dụ Response
     "following_count": 150
   }
 }
+
 ### 2. Xem hồ sơ người dùng khác (View Another User's Profile)
 URL: /api/users/<user_id>/profile
 

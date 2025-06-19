@@ -14,4 +14,11 @@ public interface PostRepostitory extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long postId);
     boolean existsById(Long postId);
     Page<Post> findAllByUserIdAndStatus(String userId, Status status, Pageable pageable);
+
+    // lấy tất cả bài viết của tất cả người dùng với trạng thái cụ thể
+    Page<Post> findAllByStatus(Status status, Pageable pageable);
+
+    // lấy tất cả bài viết mà của người dùng mà người dùng theo dõi
+    //Page<Post> findAllByUserIdInAndStatus(Iterable<String> userIds, Status status, Pageable pageable);
+
 }

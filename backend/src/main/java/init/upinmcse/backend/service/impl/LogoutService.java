@@ -1,8 +1,9 @@
-package init.upinmcse.backend.service;
+package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.model.TokenRevoked;
 import init.upinmcse.backend.repository.TokenRevokedRepository;
+import init.upinmcse.backend.service.IJwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;

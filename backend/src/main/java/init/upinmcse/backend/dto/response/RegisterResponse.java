@@ -4,21 +4,13 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PostResponse {
-    Long postId;
-    String userId;
+public class RegisterResponse {
+    String email;
     String fullName;
-    String avtUrl;
-    String caption;
-    List<String> fileUrls;
-    List<String> likedUserIds;
-    Date createdAt;
 }

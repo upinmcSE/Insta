@@ -3,13 +3,17 @@ package init.upinmcse.backend.service.impl;
 import init.upinmcse.backend.constant.PredefinedRole;
 import init.upinmcse.backend.dto.request.*;
 import init.upinmcse.backend.dto.response.JwtResponse;
+import init.upinmcse.backend.dto.response.RegisterResponse;
 import init.upinmcse.backend.enums.GENDER;
+import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
+import init.upinmcse.backend.model.UserProfile;
 import init.upinmcse.backend.repository.RoleRepository;
+import init.upinmcse.backend.repository.UserProfileRepository;
 import init.upinmcse.backend.repository.UserRepository;
 import init.upinmcse.backend.service.IAuthService;
 import jakarta.mail.MessagingException;
@@ -37,6 +41,7 @@ import java.util.Set;
 @Slf4j
 public class AuthService implements IAuthService {
     UserRepository userRepository;
+    UserProfileRepository userProfileRepository;
     RoleRepository roleRepository;
     MailService mailService;
     PasswordEncoder passwordEncoder;
@@ -54,16 +59,11 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
+    public RegisterResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
         if (existedUser) {
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-            if (user.isEnabled()) {
-                throw new ErrorException(ErrorCode.USER_ALREADY_EXISTS);
-            }
+            throw new ErrorException(ErrorCode.USER_ALREADY_EXISTS);
         }
-
-        String code = generateCode();
 
         Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new ErrorException(ErrorCode.ROLE_NOT_FOUND));
@@ -72,18 +72,27 @@ public class AuthService implements IAuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of(role))
-                .enabled(false)
-                .gender(GENDER.OTHER)
-                .verifyCode(passwordEncoder.encode(code))
-                .verifyExpired(LocalDateTime.now().plusMinutes(4))
+                .status(Status.ACTIVE)
                 .build();
         userRepository.save(user);
+        // Tạo user profile
+        UserProfile userProfile = UserProfile.builder()
+                .id(user.getId())
+                .fullName(request.getFullName())
+                .dob(null)
+                .gender(GENDER.OTHER)
+                .bio("")
+                .avtUrl("")
+                .build();
 
-        mailService.sendEmail(
-                request.getEmail(),
-                "Xác thực tài khoản",
-                "Mã xác thực của bạn là: " + code
-        );
+        userProfile = userProfileRepository.save(userProfile);
+
+
+
+
+        return RegisterResponse.builder()
+                .email(request.getEmail())
+                .build();
     }
 
     @Override
@@ -136,7 +145,6 @@ public class AuthService implements IAuthService {
                 .accessToken(jwtService.generateToken(email, TYPE_TOKEN.ACCESS_TOKEN))
                 .refreshToken(refreshToken)
                 .build();
-
     }
 
     @Override
@@ -144,18 +152,7 @@ public class AuthService implements IAuthService {
         log.info("email: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        if(passwordEncoder.matches(request.getCode(), user.getVerifyCode())){
-            if(user.getVerifyExpired().isBefore(LocalDateTime.now())){
-                throw new ErrorException(ErrorCode.ACTIVATION_CODE_NOT_MATCH);
-            }
 
-            user.setEnabled(true);
-            user.setVerifyCode(null);
-            user.setVerifyExpired(null);
-            userRepository.save(user);
-        } else {
-            throw new ErrorException(ErrorCode.ACTIVATION_CODE_NOT_MATCH);
-        }
     }
 
     @Override
@@ -165,8 +162,6 @@ public class AuthService implements IAuthService {
 
         String code = generateCode();
         String hashedToken = passwordEncoder.encode(code);
-        user.setVerifyCode(hashedToken);
-        user.setVerifyExpired(LocalDateTime.now().plusMinutes(4));
         userRepository.save(user);
         try {
             mailService.sendEmail(
@@ -182,17 +177,7 @@ public class AuthService implements IAuthService {
     @Override
     public void resetPassword(ResetPasswordRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        if (passwordEncoder.matches(request.getCode(), user.getVerifyCode())
-                && !user.getVerifyExpired().isBefore(LocalDateTime.now())) {
-            user.setVerifyCode(null);
-            user.setVerifyExpired(null);
-            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-            userRepository.save(user);
-        } else if (passwordEncoder.matches(request.getCode(), user.getVerifyCode())
-                && user.getVerifyExpired().isBefore(LocalDateTime.now())) {
-            throw new ErrorException(ErrorCode.ACTIVATION_CODE_NOT_MATCH);
-        } else {
-            throw new ErrorException(ErrorCode.ACTIVATION_CODE_NOT_MATCH);
-        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }

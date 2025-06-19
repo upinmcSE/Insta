@@ -3,6 +3,7 @@ package init.upinmcse.backend.config.init;
 import java.util.HashSet;
 
 import init.upinmcse.backend.constant.PredefinedRole;
+import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.RoleRepository;
@@ -59,7 +60,7 @@ public class ApplicationInit {
                         .email(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .roles(roles)
-                        .enabled(true)
+                        .status(Status.ACTIVE)
                         .build();
 
                 userRepository.save(user);

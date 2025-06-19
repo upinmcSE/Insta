@@ -21,9 +21,7 @@ public class UserResponse {
     LocalDate dob;
     GENDER gender;
     String avtUrl;
-    String profileUrl;
     String bio;
-//    List<String> roles;
     List<String> followers; // List of user IDs who follow this user
     List<String> following; // List of user IDs that this user follows
 

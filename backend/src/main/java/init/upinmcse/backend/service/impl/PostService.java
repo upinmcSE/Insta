@@ -23,6 +23,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -43,6 +44,7 @@ public class PostService implements IPostService {
     IFileService fileService;
     UserRepository userRepository;
     PostLikeRepository postLikeRepository;
+    RabbitTemplate rabbitTemplate;
 
     @Override
     public PostResponse createPost(List<MultipartFile> files, PostRequest postRequest) {
@@ -98,11 +100,12 @@ public class PostService implements IPostService {
         return PostResponse.builder()
                 .postId(post.getId())
                 .userId(user.getId())
-                .fullName(user.getFullName())
-                .avtUrl(user.getAvtUrl())
+                .fullName(user.getUserProfile().getFullName())
+                .avtUrl(user.getUserProfile().getAvtUrl())
                 .caption(post.getCaption())
                 .fileUrls(files.stream().map(File::getUrl).toList())
                 .likedUserIds(likedUserIds)
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 
@@ -120,13 +123,14 @@ public class PostService implements IPostService {
             post -> PostResponse.builder()
                     .postId(post.getId())
                     .userId(user.getId())
-                    .fullName(user.getFullName())
-                    .avtUrl(user.getAvtUrl())
+                    .fullName(user.getUserProfile().getFullName())
+                    .avtUrl(user.getUserProfile().getAvtUrl())
                     .caption(post.getCaption())
                     .fileUrls(fileRepository.findAllByPostId(post.getId()).stream()
                             .map(File::getUrl).toList())
                     .likedUserIds(postLikeRepository.findAllByPostId(post.getId()).stream().map(
                             postLike -> postLike.getUser().getId()).toList())
+                    .createdAt(post.getCreatedAt())
                     .build()).toList();
 
 
