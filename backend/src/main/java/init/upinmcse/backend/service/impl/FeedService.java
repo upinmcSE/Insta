@@ -4,6 +4,7 @@ import init.upinmcse.backend.dto.common.PageResponse;
 import init.upinmcse.backend.dto.response.PostResponse;
 import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.model.File;
+import init.upinmcse.backend.repository.FeedRepository;
 import init.upinmcse.backend.repository.FileRepository;
 import init.upinmcse.backend.repository.PostLikeRepository;
 import init.upinmcse.backend.repository.PostRepostitory;
@@ -23,6 +24,7 @@ public class FeedService implements IFeedService {
     PostRepostitory postRepostitory;
     FileRepository fileRepository;
     PostLikeRepository postLikeRepository;
+    FeedRepository feedRepository;
 
     @Override
     public PageResponse<PostResponse> getGlobalFeed(int page, int size) {
