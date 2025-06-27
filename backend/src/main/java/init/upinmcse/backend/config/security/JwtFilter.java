@@ -58,8 +58,9 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 UserDetails userDetails = userSecurityService.loadUserByUsername(username);
 
-                // Check if token is revoked (logout case)
                 String tokenId = null;
+
+                // Check if token is revoked (logout case)
                 try {
                     tokenId = jwtService.extractId(token, TYPE_TOKEN.ACCESS_TOKEN);
                 } catch (Exception e) {

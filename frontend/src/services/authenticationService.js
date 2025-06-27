@@ -13,6 +13,18 @@ export const logIn = async (username, password) => {
   return response;
 };
 
+export const register = async (username, password, rePassword) => {
+  const response = await httpClient.post(API.REGISTER, {
+    username: username,
+    password: password,
+    rePassword: rePassword,
+  });
+
+  setToken(response.data?.result?.token);
+
+  return response;
+}
+
 export const logOut = () => {
   removeToken();
 };
