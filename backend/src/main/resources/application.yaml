@@ -39,11 +39,11 @@ spring:
         passcode: guest
 
   mail:
-    from:
+    from: upinmc123@gmail.com
     host: smtp.gmail.com
     port: 587
-    username: 
-    password:
+    username: upinmc123
+    password: fczfnxqdcyziezzu
     properties:
       mail:
         smtp:
