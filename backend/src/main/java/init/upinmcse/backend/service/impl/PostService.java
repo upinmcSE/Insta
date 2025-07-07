@@ -12,10 +12,10 @@ import init.upinmcse.backend.model.File;
 import init.upinmcse.backend.model.Post;
 import init.upinmcse.backend.model.PostLike;
 import init.upinmcse.backend.model.User;
-import init.upinmcse.backend.repository.FileRepository;
-import init.upinmcse.backend.repository.PostLikeRepository;
-import init.upinmcse.backend.repository.PostRepostitory;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.db.FileRepository;
+import init.upinmcse.backend.repository.db.PostLikeRepository;
+import init.upinmcse.backend.repository.db.PostRepostitory;
+import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IFileService;
 import init.upinmcse.backend.service.IPostService;
 import jakarta.transaction.Transactional;
@@ -93,6 +93,7 @@ public class PostService implements IPostService {
                 () -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         var files = fileRepository.findAllByPostId(postId);
+
         var likedUserIds = postLikeRepository.findAllByPostId(postId).stream()
                 .map(postLike -> postLike.getUser().getId())
                 .toList();
@@ -100,8 +101,8 @@ public class PostService implements IPostService {
         return PostResponse.builder()
                 .postId(post.getId())
                 .userId(user.getId())
-                .fullName(user.getUserProfile().getFullName())
-                .avtUrl(user.getUserProfile().getAvtUrl())
+                .fullName(user.getFullName())
+                .avtUrl(user.getAvtUrl())
                 .caption(post.getCaption())
                 .fileUrls(files.stream().map(File::getUrl).toList())
                 .likedUserIds(likedUserIds)
@@ -123,8 +124,8 @@ public class PostService implements IPostService {
             post -> PostResponse.builder()
                     .postId(post.getId())
                     .userId(user.getId())
-                    .fullName(user.getUserProfile().getFullName())
-                    .avtUrl(user.getUserProfile().getAvtUrl())
+                    .fullName(user.getFullName())
+                    .avtUrl(user.getAvtUrl())
                     .caption(post.getCaption())
                     .fileUrls(fileRepository.findAllByPostId(post.getId()).stream()
                             .map(File::getUrl).toList())

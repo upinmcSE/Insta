@@ -1,4 +1,4 @@
-package init.upinmcse.backend.repository;
+package init.upinmcse.backend.repository.db;
 
 import init.upinmcse.backend.enums.FileType;
 import init.upinmcse.backend.model.File;

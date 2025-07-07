@@ -28,15 +28,16 @@ spring:
       host: localhost
       port: 6379
 
-  rabbitmq:
-    host: rabbitmq
-    port: 5672
-    stomp:
-      relay:
-        host: rabbitmq
-        port: 61613
-        login: guest
-        passcode: guest
+
+#  rabbitmq:
+#    host: rabbitmq
+#    port: 5672
+#    stomp:
+#      relay:
+#        host: rabbitmq
+#        port: 61613
+#        login: guest
+#        passcode: guest
 
   mail:
     from: upinmc123@gmail.com
@@ -53,10 +54,9 @@ spring:
             required: true
 
 jwt:
-  accessKey: "hPYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
-  refreshKey: "PYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
-  accessExpiryMinutes: 1800000   # 30 phut
-  refreshExpiryMinutes: 43200000   # 30 ngay
+  secretKey: "hPYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
+  accessExpiryMinutes: 30 # 60s
+  refreshExpiryMinutes: 3600 # 1h
 
 app:
   file:

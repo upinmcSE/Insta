@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +37,7 @@ public class AuthController {
 
     // UC-2: Login
     @PostMapping("/login")
-    public BaseResponse<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
+    public BaseResponse<JwtResponse> login(@Valid @RequestBody LoginRequest request) throws ParseException {
         return BaseResponse.<JwtResponse>builder()
                 .message("Login successfully")
                 .result(authenticationService.login(request))

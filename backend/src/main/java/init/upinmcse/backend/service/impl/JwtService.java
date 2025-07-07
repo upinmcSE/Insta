@@ -1,27 +1,30 @@
 package init.upinmcse.backend.service.impl;
 
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
+import init.upinmcse.backend.exception.ErrorCode;
+import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.User;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.db.TokenRevokedRepository;
+import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IJwtService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.security.Key;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -29,32 +32,57 @@ import java.util.function.Function;
 @Slf4j(topic = "JwtService")
 public class JwtService implements IJwtService {
     UserRepository userRepository;
+    TokenRevokedRepository tokenRevokedRepository;
 
     @NonFinal
-    @Value("${jwt.accessKey}")
-    String ACCESS_KEY;
-
-    @NonFinal
-    @Value("${jwt.refreshKey}")
-    String REFRESH_KEY;
+    @Value("${jwt.secretKey}")
+    String SIGNER_KEY;
 
     @NonFinal
     @Value("${jwt.accessExpiryMinutes}")
-    int ACCESS_EXPIRY_MINUTES;
+    long ACCESS_EXPIRY_SECONDS;
 
     @NonFinal
     @Value("${jwt.refreshExpiryMinutes}")
-    int REFRESH_EXPIRY_MINUTES;
+    long REFRESH_EXPIRY_SECONDS;
 
     @Override
     public String generateToken(String email, TYPE_TOKEN typeToken) {
-        Map<String, Object> claims = new HashMap<>();
-        User user = userRepository.findByEmail(email).orElseThrow();
-        claims.put("id", UUID.randomUUID().toString());
-        claims.put("fullName", user.getUserProfile().getFullName());
-        claims.put("enabled", user.isEnabled());
-        claims.put("scope", buildScope(user));
-        return createToken(claims, email, typeToken);
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+        long expiryTimeInSeconds = typeToken == TYPE_TOKEN.ACCESS_TOKEN ? ACCESS_EXPIRY_SECONDS : REFRESH_EXPIRY_SECONDS;
+
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                .subject(email)
+                .issueTime(new Date())
+                .expirationTime(new Date(Instant.now().plus(expiryTimeInSeconds, ChronoUnit.SECONDS).toEpochMilli()))
+                .jwtID(UUID.randomUUID().toString())
+                .claim("scope", buildScope(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"))))
+                .build();
+
+        Payload payload = new Payload(claimsSet.toJSONObject());
+
+        JWSObject jwsObject = new JWSObject(header, payload);
+
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            log.error("Cannot create token", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Date extractExpiration(String token, TYPE_TOKEN typeToken) throws ParseException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
+
+        if (claimsSet != null && claimsSet.getExpirationTime() != null) {
+            return claimsSet.getExpirationTime();
+        }
+
+        throw new ErrorException(ErrorCode.INVALID_TOKEN);
     }
 
     private String buildScope(User user) {
@@ -68,67 +96,39 @@ public class JwtService implements IJwtService {
         return stringJoiner.toString();
     }
 
-    private String createToken(Map<String, Object> claims, String email, TYPE_TOKEN typeToken) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setIssuer("U-Poops")
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + (typeToken.equals(TYPE_TOKEN.ACCESS_TOKEN) ? ACCESS_EXPIRY_MINUTES : REFRESH_EXPIRY_MINUTES)))
-                .signWith(SignatureAlgorithm.HS512, getSigneKey(typeToken))
-                .compact();
-    }
 
-    private Key getSigneKey(TYPE_TOKEN typeToken) {
-        byte[] keyByte = Decoders.BASE64.decode(typeToken.equals(TYPE_TOKEN.ACCESS_TOKEN) ? ACCESS_KEY : REFRESH_KEY);
-        return Keys.hmacShaKeyFor(keyByte);
+    @Override
+    public String extractJwtId(String token, TYPE_TOKEN typeToken) throws ParseException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        if (signedJWT.getJWTClaimsSet() != null && signedJWT.getJWTClaimsSet().getJWTID() != null) {
+            return signedJWT.getJWTClaimsSet().getJWTID();
+        }
+        return null;
     }
 
     @Override
-    public String extractJit(String token, TYPE_TOKEN typeToken) {
-        return Jwts.parser()
-                .setSigningKey(getSigneKey(typeToken))
-                .parseClaimsJws(token)
-                .getBody()
-                .getId();
+    public void validateToken(String token) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Check signature
+        if (!signedJWT.verify(verifier)) {
+            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        // Check expiration time - throw specific exception for expired token
+        Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        if (expirationTime.before(new Date())) {
+            throw new ErrorException(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        // Check token revoked
+        String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
+        if (tokenRevokedRepository.existsById(jwtId)) {
+            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        }
+
     }
 
-    private Claims extractAllClaims(String token, TYPE_TOKEN typeToken) {
-        return Jwts.parser()
-                .setSigningKey(getSigneKey(typeToken))
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-
-    public <T> T extractClaims(String token, TYPE_TOKEN typeToken, Function<Claims, T> claimsTFunction) {
-        final Claims claims = extractAllClaims(token, typeToken);
-        return claimsTFunction.apply(claims);
-    }
-
-
-    public Date extractExpiration(String token, TYPE_TOKEN typeToken) {
-        return extractClaims(token, typeToken, Claims::getExpiration);
-    }
-
-
-    public String extractId(String token, TYPE_TOKEN typeToken) {
-        return extractClaims(token, typeToken, claims -> claims.get("id", String.class));
-    }
-
-
-    public String extractEmail(String token, TYPE_TOKEN typeToken) {
-        return extractClaims(token, typeToken, Claims::getSubject);
-    }
-
-    private Boolean isTokenExpired(String token, TYPE_TOKEN typeToken) {
-        return extractExpiration(token, typeToken).before(new Date());
-    }
-
-
-    public Boolean validateToken(String token, TYPE_TOKEN typeToken, UserDetails userDetails) {
-        final String username = extractEmail(token, typeToken);
-        return (
-                username.equals(userDetails.getUsername()) && !isTokenExpired(token, typeToken));
-    }
 }

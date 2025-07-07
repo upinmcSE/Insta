@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ChatController {
-    SimpMessagingTemplate messagingTemplate;
 
 
 

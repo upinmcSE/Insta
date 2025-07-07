@@ -4,36 +4,28 @@ import init.upinmcse.backend.constant.PredefinedRole;
 import init.upinmcse.backend.dto.request.*;
 import init.upinmcse.backend.dto.response.JwtResponse;
 import init.upinmcse.backend.dto.response.RegisterResponse;
-import init.upinmcse.backend.enums.GENDER;
 import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
-import init.upinmcse.backend.model.UserProfile;
-import init.upinmcse.backend.repository.RoleRepository;
-import init.upinmcse.backend.repository.UserProfileRepository;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.cache.impl.TokenRedis;
+import init.upinmcse.backend.repository.db.RoleRepository;
+import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IAuthService;
-import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
+import java.text.ParseException;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -41,12 +33,11 @@ import java.util.Set;
 @Slf4j
 public class AuthService implements IAuthService {
     UserRepository userRepository;
-    UserProfileRepository userProfileRepository;
     RoleRepository roleRepository;
     MailService mailService;
     PasswordEncoder passwordEncoder;
-    AuthenticationManager authenticationManager;
     JwtService jwtService;
+    TokenRedis tokenRedis;
 
 
     private static String generateCode() {
@@ -59,7 +50,8 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public RegisterResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
+    @Transactional
+    public RegisterResponse register(RegisterRequest request) {
         boolean existedUser = userRepository.existsByEmail(request.getEmail());
         if (existedUser) {
             throw new ErrorException(ErrorCode.USER_ALREADY_EXISTS);
@@ -71,87 +63,64 @@ public class AuthService implements IAuthService {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getFullName())
                 .roles(Set.of(role))
                 .status(Status.ACTIVE)
                 .build();
-        userRepository.save(user);
-        // Tạo user profile
-        UserProfile userProfile = UserProfile.builder()
-                .id(user.getId())
-                .fullName(request.getFullName())
-                .dob(null)
-                .gender(GENDER.OTHER)
-                .bio("")
-                .avtUrl("")
-                .build();
-
-        userProfile = userProfileRepository.save(userProfile);
-
-
-
+        user = userRepository.save(user);
 
         return RegisterResponse.builder()
-                .email(request.getEmail())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
                 .build();
     }
 
     @Override
-    public JwtResponse login(LoginRequest request) {
-        try{
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+    public JwtResponse login(LoginRequest request) throws ParseException {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
-            if (!user.isEnabled()) {
-                throw new ErrorException(ErrorCode.USER_NOT_ACTIVATED);
-            }
-
-            // Thực hiện xác thực với username và password
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-            log.info("Authentication: {}", authentication);
-            if (authentication.isAuthenticated()) {
-                String accessToken = jwtService.generateToken(request.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
-                String refreshToken = jwtService.generateToken(request.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
-                return JwtResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-            }
-
-        } catch (AuthenticationException e) {
+        var authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        if (!authenticated) {
             throw new ErrorException(ErrorCode.UNAUTHENTICATED);
         }
-        throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        var accessToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
+        var refreshToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
+
+        var refreshTokenId = jwtService.extractJwtId(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
+        var expiration = jwtService.extractExpiration(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
+
+        // Tính khoảng thời gian còn lại (từ hiện tại đến expiration) bằng milliseconds
+        long currentTimeMillis = System.currentTimeMillis();
+        long expirationTimeMillis = expiration.getTime();
+        long durationInMillis = expirationTimeMillis - currentTimeMillis;
+
+        // Chuyển thành số giây
+        long expirationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
+
+        // Đảm bảo expirationInSeconds không âm
+        if (expirationInSeconds <= 0) {
+            throw new IllegalArgumentException("Token has already expired");
+        }
+
+        tokenRedis.set(user.getId(), refreshTokenId, expirationInSeconds);
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshTokenId)
+                .build();
     }
 
 
     @Override
     public JwtResponse refreshToken(RefreshRequest request) {
-        String refreshToken = request.getRefreshToken();
-        String email = jwtService.extractEmail(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
-        if (email != null) {
-            User user = userRepository.findByEmail(email).orElseThrow();
-            if (!user.isEnabled()) {
-                throw new ErrorException(ErrorCode.USER_NOT_ACTIVATED);
-            }
-            String accessToken = jwtService.generateToken(email, TYPE_TOKEN.ACCESS_TOKEN);
-        }else{
-            throw new ErrorException(ErrorCode.INVALID_TOKEN);
-        }
-        return JwtResponse.builder()
-                .accessToken(jwtService.generateToken(email, TYPE_TOKEN.ACCESS_TOKEN))
-                .refreshToken(refreshToken)
-                .build();
+        return null;
     }
 
     @Override
     public void verifyEmail(VerifyRequest request) {
         log.info("email: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-
 
     }
 

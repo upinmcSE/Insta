@@ -6,8 +6,8 @@ import init.upinmcse.backend.constant.PredefinedRole;
 import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
-import init.upinmcse.backend.repository.RoleRepository;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.db.RoleRepository;
+import init.upinmcse.backend.repository.db.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +59,8 @@ public class ApplicationInit {
                 User user = User.builder()
                         .email(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
+                        .status(Status.ACTIVE)
+                        .fullName("Admin User")
                         .roles(roles)
                         .status(Status.ACTIVE)
                         .build();

@@ -4,10 +4,10 @@ import init.upinmcse.backend.dto.common.PageResponse;
 import init.upinmcse.backend.dto.response.PostResponse;
 import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.model.File;
-import init.upinmcse.backend.repository.FeedRepository;
-import init.upinmcse.backend.repository.FileRepository;
-import init.upinmcse.backend.repository.PostLikeRepository;
-import init.upinmcse.backend.repository.PostRepostitory;
+import init.upinmcse.backend.repository.db.FeedRepository;
+import init.upinmcse.backend.repository.db.FileRepository;
+import init.upinmcse.backend.repository.db.PostLikeRepository;
+import init.upinmcse.backend.repository.db.PostRepostitory;
 import init.upinmcse.backend.service.IFeedService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +39,8 @@ public class FeedService implements IFeedService {
                 post -> PostResponse.builder()
                         .postId(post.getId())
                         .userId(post.getUser().getId())
-                        .fullName(post.getUser().getUserProfile().getFullName())
-                        .avtUrl(post.getUser().getUserProfile().getAvtUrl())
+                        .fullName(post.getUser().getFullName())
+                        .avtUrl(post.getUser().getAvtUrl())
                         .caption(post.getCaption())
                         .fileUrls(fileRepository.findAllByPostId(post.getId()).stream()
                                 .map(File::getUrl).toList())

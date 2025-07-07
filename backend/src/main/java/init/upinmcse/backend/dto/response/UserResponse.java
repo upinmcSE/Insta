@@ -18,8 +18,6 @@ public class UserResponse {
     String id;
     String email;
     String fullName;
-    LocalDate dob;
-    GENDER gender;
     String avtUrl;
     String bio;
     List<String> followers; // List of user IDs who follow this user

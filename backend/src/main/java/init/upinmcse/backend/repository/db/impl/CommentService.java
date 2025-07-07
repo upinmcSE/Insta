@@ -1,4 +1,4 @@
-package init.upinmcse.backend.repository.impl;
+package init.upinmcse.backend.repository.db.impl;
 
 import init.upinmcse.backend.dto.request.CommentRequest;
 import init.upinmcse.backend.dto.request.ReplyCommentRequest;
@@ -10,10 +10,10 @@ import init.upinmcse.backend.model.Comment;
 import init.upinmcse.backend.model.Post;
 import init.upinmcse.backend.model.RepComment;
 import init.upinmcse.backend.model.User;
-import init.upinmcse.backend.repository.CommentRepository;
-import init.upinmcse.backend.repository.PostRepostitory;
-import init.upinmcse.backend.repository.RepCommentRepository;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.db.CommentRepository;
+import init.upinmcse.backend.repository.db.PostRepostitory;
+import init.upinmcse.backend.repository.db.RepCommentRepository;
+import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.ICommentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +50,8 @@ public class CommentService implements ICommentService {
                 .commentId(comment.getId())
                 .postId(post.getId())
                 .userId(user.getId())
-                .fullName(user.getUserProfile().getFullName())
-                .avtUrl(user.getUserProfile().getAvtUrl())
+                .fullName(user.getFullName())
+                .avtUrl(user.getAvtUrl())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .build();
@@ -92,8 +92,8 @@ public class CommentService implements ICommentService {
                 .commentId(comment.getId())
                 .content(repComment.getContent())
                 .userId(user.getId())
-                .fullName(user.getUserProfile().getFullName())
-                .avtUrl(user.getUserProfile().getAvtUrl())
+                .fullName(user.getFullName())
+                .avtUrl(user.getAvtUrl())
                 .build();
     }
 

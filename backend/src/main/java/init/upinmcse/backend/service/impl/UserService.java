@@ -5,15 +5,14 @@ import init.upinmcse.backend.dto.request.ChangePasswordRequest;
 import init.upinmcse.backend.dto.request.UpdateInfo;
 import init.upinmcse.backend.dto.response.UserResponse;
 import init.upinmcse.backend.enums.FileType;
-import init.upinmcse.backend.enums.GENDER;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.File;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.model.UserFollowing;
-import init.upinmcse.backend.repository.FileRepository;
-import init.upinmcse.backend.repository.FollowerRepository;
-import init.upinmcse.backend.repository.UserRepository;
+import init.upinmcse.backend.repository.db.FileRepository;
+import init.upinmcse.backend.repository.db.FollowerRepository;
+import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -24,11 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,17 +38,14 @@ public class UserService implements IUserService {
     @Override
     public UserResponse getMe() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         return UserResponse.builder()
                         .id(user.getId())
                         .email(user.getEmail())
-                        .fullName(user.getUserProfile().getFullName())
-                        .bio(user.getUserProfile().getBio())
-                        .dob(user.getUserProfile().getDob())
-                        .gender(user.getUserProfile().getGender())
+                        .fullName(user.getFullName())
+                        .bio(user.getBio())
                         .avtUrl(getUserImage(user.getId()))
                 .followers(followerRepository.findFollowingUserIdsByFollowerUserId(user.getId()))
                 .following(followerRepository.findFollowerUserIdsByFollowingUserId(user.getId()))
@@ -67,10 +60,8 @@ public class UserService implements IUserService {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .fullName(user.getUserProfile().getFullName())
-                .bio(user.getUserProfile().getBio())
-                .dob(user.getUserProfile().getDob())
-                .gender(user.getUserProfile().getGender())
+                .fullName(user.getFullName())
+                .bio(user.getBio())
                 .avtUrl(getUserImage(user.getId()))
                 .followers(followerRepository.findFollowingUserIdsByFollowerUserId(user.getId()))
                 .following(followerRepository.findFollowerUserIdsByFollowingUserId(user.getId()))

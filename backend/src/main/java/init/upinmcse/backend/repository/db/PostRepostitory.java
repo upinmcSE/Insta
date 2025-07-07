@@ -1,4 +1,4 @@
-package init.upinmcse.backend.repository;
+package init.upinmcse.backend.repository.db;
 
 import init.upinmcse.backend.enums.Status;
 import init.upinmcse.backend.model.Post;
@@ -15,13 +15,15 @@ import java.util.Optional;
 @Repository
 public interface PostRepostitory extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long postId);
+
     boolean existsById(Long postId);
+
     // lấy tất cả bài viết của tất cả người dùng với trạng thái cụ thể
     Page<Post> findAllByStatus(Status status, Pageable pageable);
 
-    // lấy tất cả bài viết theo list id
-    @Query("SELECT p FROM Post p WHERE p.id IN :postIds AND p.status = init.upinmcse.backend.enums.Status.ACTIVE")
-    List<Post> findAllByIdInAndStatus(@Param("postIds") List<Long> postIds, @Param("status") Status status);
+    // lấy tất cả bài viết của theo userId và trạng thái cụ thể
+    Page<Post> findAllByUserIdAndStatus(String userId, Status status, Pageable pageable);
+
 
     // lây tất cả bài viết của những nguoi mà userId theo dõi
     @Query("SELECT p.id FROM Post p " +

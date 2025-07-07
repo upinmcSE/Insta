@@ -12,13 +12,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterRequest {
 
-    @Email(message = "INVALID_EMAIL")
+    @Email(message = "Không đúng định dạng email")
     String email;
 
-    @PasswordConstraint(message = "INVALID_PASSWORD")
+    @PasswordConstraint(message = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt")
     String password;
 
     @NonNull
-    @Min(value = 3)
     String fullName;
 }

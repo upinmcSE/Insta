@@ -1,8 +1,8 @@
-package init.upinmcse.backend.repository.impl;
+package init.upinmcse.backend.repository.db.impl;
 
 import init.upinmcse.backend.dto.response.FileInfo;
 import init.upinmcse.backend.model.File;
-import init.upinmcse.backend.repository.FileStoreRepository;
+import init.upinmcse.backend.repository.db.FileStoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;

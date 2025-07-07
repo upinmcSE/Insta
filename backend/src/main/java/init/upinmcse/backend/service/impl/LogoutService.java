@@ -2,7 +2,8 @@ package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.model.TokenRevoked;
-import init.upinmcse.backend.repository.TokenRevokedRepository;
+import init.upinmcse.backend.repository.cache.impl.TokenRedis;
+import init.upinmcse.backend.repository.db.TokenRevokedRepository;
 import init.upinmcse.backend.service.IJwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class LogoutService implements LogoutHandler {
     TokenRevokedRepository tokenRevokedRepository;
     IJwtService jwtService;
+    TokenRedis tokenRedis;
 
     @Override
     public void logout(
@@ -30,6 +32,7 @@ public class LogoutService implements LogoutHandler {
             Authentication authentication
     ) {
         final String authHeader = request.getHeader("Authorization");
+        final String userId = request.getHeader("userId");
         final String jwt;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -38,7 +41,7 @@ public class LogoutService implements LogoutHandler {
         jwt = authHeader.substring(7);
         log.info("JWT token: {}", jwt);
         try {
-            String id = jwtService.extractId(jwt, TYPE_TOKEN.ACCESS_TOKEN);
+            String id = jwtService.extractJwtId(jwt, TYPE_TOKEN.ACCESS_TOKEN);
             log.info("Extracted ID: {}", id);
             if( id == null) {
                 log.error("Id is null, cannot revoke token");
@@ -53,6 +56,9 @@ public class LogoutService implements LogoutHandler {
                         .build();
                 tokenRevokedRepository.save(storedToken);
             }
+
+            tokenRedis.delete(userId);
+
             SecurityContextHolder.clearContext();
             response.setStatus(HttpServletResponse.SC_OK);
 
