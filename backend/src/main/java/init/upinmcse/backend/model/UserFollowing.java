@@ -11,8 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_following", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "followerUserId", "followingUserId" }) })
+//@Table(name = "tb_following", uniqueConstraints = {
+//        @UniqueConstraint(columnNames = { "followerUserId", "followingUserId" }) })
+
+@Table(name = "tb_following", indexes = {
+        @Index(columnList = "followerUserId"),
+        @Index(columnList = "followingUserId")
+}) // linh hoạt hơn khi truy vấn đơn cột
 public class UserFollowing extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

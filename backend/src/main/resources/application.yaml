@@ -16,7 +16,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/insta"
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: thanhdeptrai
+    password: root
 
   jpa:
     hibernate:

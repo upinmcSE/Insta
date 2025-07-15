@@ -16,11 +16,11 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(name = "created_at", length = 255)
+    @Column(name = "created_at")
     @CreatedDate
     private Date createdAt;
 
-    @Column(name = "updated_at", length = 255)
+    @Column(name = "updated_at")
     @LastModifiedDate
     private Date updatedAt;
 }
