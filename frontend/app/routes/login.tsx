@@ -1,27 +1,29 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { redirect } from "react-router";
 import { isAuthenticated, login } from '@/services/auth';
-import { setToken } from '@/services/storage';
+import { setToken, setUser } from '@/services/storage';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated() != null) {
-      redirect("/");
+      navigate("/")
     }
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Email:', email, 'Password:', password);
      try {
       const response = await login(email, password);
-      console.log("Response body:", response.result.accessToken);
+      console.log("Response body:", response.result.userLoginInfo);
       setToken(response.result.accessToken)
+      setUser(response.result.userLoginInfo)
       redirect("/");
     } catch (error) {
       console.log(error)

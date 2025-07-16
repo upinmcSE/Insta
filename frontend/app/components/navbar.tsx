@@ -8,7 +8,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
   return (
-    <div className="w-64 h-screen bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
+    <div className="fixed w-64 h-screen bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
       <div>
         <div className="mb-8">
           <h1 className="text-4xl font-script text-gray-800">Insta</h1>

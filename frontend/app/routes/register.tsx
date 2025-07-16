@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { redirect } from "react-router";
 import { isAuthenticated, register } from '@/services/auth';
 
@@ -10,11 +10,13 @@ const Register: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
 
+  let navigate = useNavigate();
+
   useEffect(() => {
-    if(isAuthenticated != null){
-        redirect("/")
+    if (isAuthenticated() != null) {
+      navigate("/")
     }
-  }, [])
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,5 +1,6 @@
 package init.upinmcse.backend.dto.response;
 
+import init.upinmcse.backend.dto.request.UserLoginInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,4 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class JwtResponse {
     String accessToken;
     String refreshToken;
+    UserLoginInfo userLoginInfo;
 }

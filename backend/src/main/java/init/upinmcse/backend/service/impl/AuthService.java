@@ -105,9 +105,16 @@ public class AuthService implements IAuthService {
 
         tokenRedis.set(user.getId(), refreshTokenId, expirationInSeconds);
 
+        var userInfo = UserLoginInfo.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .avataUrl(user.getAvtUrl())
+                .build();
+
         return JwtResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshTokenId)
+                .userLoginInfo(userInfo)
                 .build();
     }
 

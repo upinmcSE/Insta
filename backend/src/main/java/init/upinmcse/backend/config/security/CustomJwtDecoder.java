@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,52 +41,26 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        try {
-            validateToken(token);
-        } catch (ErrorException e) {
-            // Throw OAuth2AuthenticationException with specific OAuth2Error
-            OAuth2Error error = new OAuth2Error(
-                    String.valueOf(e.getErrorCode().getCode()),
-                    e.getErrorCode().getMessage(),
-                    null
-            );
-            throw new OAuth2AuthenticationException(error);
-        } catch (JOSEException | ParseException e) {
-            OAuth2Error error = new OAuth2Error(
-                    String.valueOf(ErrorCode.INVALID_TOKEN.getCode()),
-                    ErrorCode.INVALID_TOKEN.getMessage(),
-                    null
-            );
-            throw new OAuth2AuthenticationException(error);
-        }
-
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }
-        return nimbusJwtDecoder.decode(token);
-    }
 
-    private void validateToken(String token) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        // Check signature
-        if (!signedJWT.verify(verifier)) {
-            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
-        }
-
-        // Check expiration time
-        Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-        if (expirationTime.before(new Date())) {
-            throw new ErrorException(ErrorCode.TOKEN_EXPIRED);
-        }
-
-        // Check token revoked
-        String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
-        if (tokenRevokedRepository.existsById(jwtId)) {
-            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        try {
+            Jwt jwt = nimbusJwtDecoder.decode(token);
+            String jwtId = jwt.getId();
+            if (jwtId != null && tokenRevokedRepository.existsById(jwtId)) {
+                throw new BadJwtException("Token is revoked");
+            }
+            return jwt;
+        } catch (JwtValidationException e) {
+            log.error("Lỗi giải mã token: {}", e.getMessage());
+            if (e.getMessage().contains("expired")) {
+                throw new InvalidBearerTokenException("Token đã hết hạn", e);
+            }
+            throw new InvalidBearerTokenException("Token không hợp lệ", e);
         }
     }
 }

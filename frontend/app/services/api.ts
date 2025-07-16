@@ -1,7 +1,7 @@
 import axios, { AxiosError, type AxiosInstance, type AxiosResponse } from "axios";
 import { getToken } from "./storage";
 
-const url = "http://localhost:8181/poops";
+const url = "http://localhost:8181";
 
 
 const Api: AxiosInstance = axios.create({ baseURL: url + "/api/v1" });

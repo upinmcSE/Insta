@@ -1,39 +1,207 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router';
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { Post as PostType } from '@/types/types';
+import { getUser } from '@/services/storage';
 
 interface PostProps {
-  username: string;
-  imageUrl: string;
-  caption: string;
-  likes: number;
-  comments: number;
-  timeAgo: string;
+  post: PostType;
+  onComment: (postId: string, comment: string) => Promise<void>;
 }
 
-const Post: React.FC<PostProps> = ({ username, imageUrl, caption, likes, comments, timeAgo }) => {
+const Post: React.FC<PostProps> = ({ post, onComment }) => {
+  const [user, setUser] = useState(post.user)
+  const [liked, setLiked] = useState(post.liked_by_current_user || false);
+  const [likeCount, setLikeCount] = useState(post.like_count || 0);
+  const [comment, setComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Track current image
+
+  const timeSince = (timestamp: number | string) => {
+    const date = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp);
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + ' years ago';
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + ' months ago';
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + ' days ago';
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + ' hours ago';
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + ' minutes ago';
+    return Math.floor(seconds) + ' seconds ago';
+  };
+
+  const handleLike = async () => {
+    if (!user) return;
+
+    try {
+      if (liked) {
+        //call api unlike
+        setLiked(false);
+        setLikeCount((prev) => Math.max(0, prev - 1));
+      } else {
+        //call api like
+        setLiked(true);
+        setLikeCount((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!comment.trim() || !user || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await onComment(post.id, comment);
+      setComment('');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % post.images.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + post.images.length) % post.images.length);
+  };
+
+
   return (
-    <div className="border-t border-gray-200 p-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center space-x-2">
-          <img src={imageUrl} alt={username} className="w-10 h-10 rounded-full" />
-          <div>
-            <p className="font-semibold">{username}</p>
-            <p className="text-sm text-gray-500">{timeAgo}</p>
+    <div className="instagram-card">
+      {/* Post Header */}
+      <div className="flex items-center p-3 mb-4">
+        <Link to={`/profile/${post.user.fullName}`} className="flex items-center">
+          <img
+            src={post.user.avatarUrl || '/assets/unknow.png'}
+            alt={post.user.fullName}
+            className="w-8 h-8 rounded-full object-cover mr-3"
+          />
+          <span className="font-semibold">{post.user.fullName}</span>
+        </Link>
+        <button className="ml-auto text-gray-500">
+          <MoreHorizontal size={20} />
+        </button>
+      </div>
+
+      {/* Post Image Carousel */}
+      <div className="relative">
+        <img
+          src={post.images[currentImageIndex]}
+          alt={`Post image ${currentImageIndex + 1}`}
+          className="w-full h-[400px] object-cover"
+        />
+        {post.images.length > 1 && (
+          <>
+            <button
+              onClick={handlePrevImage}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              onClick={handleNextImage}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full"
+            >
+              <ChevronRight size={24} />
+            </button>
+            {/* Image Indicators */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+              {post.images.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${
+                    index === currentImageIndex ? 'bg-white' : 'bg-gray-400'
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Post Actions */}
+      <div className="p-3">
+        <div className="flex items-center mb-3">
+          <button
+            className={`mr-4 cursor-pointer ${liked ? 'text-instagram-red' : ''}`}
+            onClick={handleLike}
+          >
+            <Heart size={24} className={liked ? 'fill-instagram-red text-instagram-red animate-like' : ''} />
+          </button>
+          <button className="mr-4 cursor-pointer">
+            <MessageCircle size={24} />
+          </button>
+          <button className="mr-4 cursor-pointer">
+            <Send size={24} />
+          </button>
+          <button className="ml-auto cursor-pointer">
+            <Bookmark size={24} />
+          </button>
+        </div>
+
+        {/* Likes count */}
+        {likeCount > 0 && (
+          <div className="font-semibold mb-2">
+            {likeCount} {likeCount === 1 ? 'like' : 'likes'}
           </div>
+        )}
+
+        {/* Caption */}
+        <div className="mb-2">
+          <Link to={`/profile/${post.user.fullName}`} className="font-semibold mr-2">
+            {post.user.fullName}
+          </Link>
+          <span>{post.caption}</span>
         </div>
-        <button className="text-gray-500">...</button>
+
+        {/* Comments */}
+        {post.comments.length > 0 && (
+          <div className="mt-1 mb-3">
+            {post.comments.length > 2 && !showAllComments && (
+              <button
+                className="text-instagram-darkGray text-sm mb-2 cursor-pointer"
+                // onClick={() => setShowAllComments(true)}
+              >
+                View all {post.comments.length} comments
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Post Date */}
+        <div className="text-xs text-instagram-darkGray mt-1">{timeSince(post.created_at)}</div>
       </div>
-      <img src={imageUrl} alt={caption} className="w-full h-64 object-cover mb-2" />
-      <div className="flex items-center justify-between">
-        <div className="flex space-x-2">
-          <button className="text-red-500">❤️</button>
-          <button className="text-gray-500">💬</button>
-          <button className="text-gray-500">📤</button>
-        </div>
-        <button className="text-gray-500">🔖</button>
-      </div>
-      <p className="text-sm font-semibold">{likes} lượt thích</p>
-      <p className="text-sm">{caption}</p>
-      <p className="text-sm text-gray-500">{comments} bình luận</p>
+
+      {/* Comment Form */}
+      <form onSubmit={handleComment} className="border-t border-instagram-border p-3 flex">
+        <input
+          type="text"
+          placeholder="Add a comment..."
+          className="flex-grow bg-transparent focus:outline-none"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <button
+          type="submit"
+          className={`font-semibold ${
+            comment.trim() ? 'text-instagram-blue cursor-pointer' : 'text-instagram-blue opacity-50'
+          }`}
+          disabled={!comment.trim() || isSubmitting}
+        >
+          Gửi
+        </button>
+      </form>
     </div>
   );
 };

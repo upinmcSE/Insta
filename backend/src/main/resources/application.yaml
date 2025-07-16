@@ -1,7 +1,10 @@
 server:
   port: 8181
-  servlet:
-        context-path: /poops
+#  servlet:
+#        context-path: /poops
+  error:
+    include-exception: false
+    include-stacktrace: never
 
 spring:
   application:
