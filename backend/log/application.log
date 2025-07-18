@@ -1,0 +1,5 @@
+2025-07-18T11:45:37.511+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-07-18T11:45:37.521+07:00  INFO 4796 --- [Poops] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-07-18T11:45:37.548+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-18T11:45:37.551+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-07-18T11:45:37.574+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

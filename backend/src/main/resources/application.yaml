@@ -3,12 +3,26 @@ server:
 #  servlet:
 #        context-path: /poops
   error:
-    include-exception: false
-    include-stacktrace: never
+    whitelabel:
+      enabled: false
+
+logging:
+  file:
+    name: ./log/application.log
+  level:
+    org:
+      springframework:
+        security: DEBUG
+#        jdbc:
+#          core: TRACE
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
 
 spring:
   application:
     name: Poops
+
 
   servlet:
     multipart:

@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router';
 import 'material-icons/iconfont/material-icons.css';
+import { LogOut } from 'lucide-react'
 
 interface NavbarProps {
   onCreateClick: () => void;
@@ -22,11 +23,11 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
             <span className="material-icons">search</span>
             <span className="text-lg">Tim kiếm</span>
           </NavLink>
-          <NavLink to="/explore" className="flex items-center space-x-4 text-gray-600 hover:text-black">
+          <NavLink to="/" className="flex items-center space-x-4 text-gray-600 hover:text-black">
             <span className="material-icons">explore</span>
             <span className="text-lg">Khám phá</span>
           </NavLink>
-          <NavLink to="/reels" className="flex items-center space-x-4 text-gray-600 hover:text-black">
+          <NavLink to="/" className="flex items-center space-x-4 text-gray-600 hover:text-black">
             <span className="material-icons">movie</span>
             <span className="text-lg">Reels</span>
           </NavLink>
@@ -38,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
             <span className="material-icons">notifications</span>
             <span className="text-lg">Thông báo</span>
           </NavLink>
-          <button onClick={onCreateClick} className="flex items-center space-x-4 text-gray-600 hover:text-black">
+          <button onClick={onCreateClick} className="flex items-center space-x-4 cursor-pointer text-gray-600 hover:text-black">
             <span className="material-icons">add_circle_outline</span>
             <span className="text-lg">Tạo</span>
           </button>
@@ -49,9 +50,12 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
         </nav>
       </div>
       <div>
-        <button className="flex items-center space-x-4 text-gray-600 hover:text-black w-full cursor-pointer">
-          <span className="material-icons">more_horiz</span>
-          <span className="text-lg">Xem thêm</span>
+        <button
+          //onClick={logout}
+          className="flex items-center p-3 rounded-md hover:bg-gray-100 transition-colors w-full"
+        >
+          <LogOut className="mr-3" size={24} />
+          <span>Logout</span>
         </button>
       </div>
     </div>

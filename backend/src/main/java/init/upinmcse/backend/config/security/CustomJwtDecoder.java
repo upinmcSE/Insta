@@ -1,16 +1,10 @@
 package init.upinmcse.backend.config.security;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.SignedJWT;
-import init.upinmcse.backend.exception.ErrorCode;
-import init.upinmcse.backend.exception.ErrorException;
+import init.upinmcse.backend.exception.TokenExpiredException;
 import init.upinmcse.backend.repository.db.TokenRevokedRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +12,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
@@ -50,17 +42,22 @@ public class CustomJwtDecoder implements JwtDecoder {
 
         try {
             Jwt jwt = nimbusJwtDecoder.decode(token);
+
+            // Kiểm tra token hết hạn
+            if (jwt.getExpiresAt() != null && jwt.getExpiresAt().isBefore(Instant.now())) {
+                throw new TokenExpiredException("Token expired");
+            }
+
             String jwtId = jwt.getId();
             if (jwtId != null && tokenRevokedRepository.existsById(jwtId)) {
-                throw new BadJwtException("Token is revoked");
+                throw new JwtException("Token revoked");
             }
             return jwt;
-        } catch (JwtValidationException e) {
-            log.error("Lỗi giải mã token: {}", e.getMessage());
-            if (e.getMessage().contains("expired")) {
-                throw new InvalidBearerTokenException("Token đã hết hạn", e);
+        } catch (JwtValidationException ex) {
+            if (ex.getMessage().contains("expired")) {
+                throw new TokenExpiredException("Token expired", ex);
             }
-            throw new InvalidBearerTokenException("Token không hợp lệ", e);
+            throw new BadJwtException("Invalid token", ex);
         }
     }
 }
