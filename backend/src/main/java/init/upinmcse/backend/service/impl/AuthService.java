@@ -9,9 +9,11 @@ import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.Role;
+import init.upinmcse.backend.model.TokenRevoked;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.cache.impl.TokenRedis;
 import init.upinmcse.backend.repository.db.RoleRepository;
+import init.upinmcse.backend.repository.db.TokenRevokedRepository;
 import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IAuthService;
 import jakarta.transaction.Transactional;
@@ -37,6 +39,7 @@ public class AuthService implements IAuthService {
     MailService mailService;
     PasswordEncoder passwordEncoder;
     JwtService jwtService;
+    TokenRevokedRepository tokenRevokedRepository;
     TokenRedis tokenRedis;
 
 
@@ -86,8 +89,6 @@ public class AuthService implements IAuthService {
         }
         var accessToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
         var refreshToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
-
-        var refreshTokenId = jwtService.extractJwtId(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
         var expiration = jwtService.extractExpiration(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
 
         // Tính khoảng thời gian còn lại (từ hiện tại đến expiration) bằng milliseconds
@@ -103,7 +104,7 @@ public class AuthService implements IAuthService {
             throw new IllegalArgumentException("Token has already expired");
         }
 
-        tokenRedis.set(user.getId(), refreshTokenId, expirationInSeconds);
+        tokenRedis.set(user.getId(), refreshToken, expirationInSeconds);
 
         var userInfo = UserLoginInfo.builder()
                 .id(user.getId())
@@ -113,15 +114,57 @@ public class AuthService implements IAuthService {
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshTokenId)
                 .userLoginInfo(userInfo)
                 .build();
     }
 
 
     @Override
-    public JwtResponse refreshToken(RefreshRequest request) {
-        return null;
+    public JwtResponse refreshToken(RefreshRequest request) throws ParseException {
+        var user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
+        var tokenId = jwtService.extractJwtId(request.getToken(), TYPE_TOKEN.ACCESS_TOKEN);
+
+        // check token logout
+        if (tokenId == null || tokenRevokedRepository.existsById(tokenId)) {
+            throw new ErrorException(ErrorCode.INVALID_TOKEN);
+        }
+
+        // check refresh token in redis
+        String refreshToken = tokenRedis.get(request.getUserId());
+        if( refreshToken == null) {
+            throw new ErrorException(ErrorCode.INVALID_TOKEN);
+        }
+
+        var token = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
+        refreshToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
+        var expiration = jwtService.extractExpiration(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
+
+        // Tính khoảng thời gian còn lại (từ hiện tại đến expiration) bằng milliseconds
+        long currentTimeMillis = System.currentTimeMillis();
+        long expirationTimeMillis = expiration.getTime();
+        long durationInMillis = expirationTimeMillis - currentTimeMillis;
+
+        // Chuyển thành số giây
+        long expirationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
+
+        // Đảm bảo expirationInSeconds không âm
+        if (expirationInSeconds <= 0) {
+            throw new IllegalArgumentException("Token has already expired");
+        }
+
+        tokenRedis.set(user.getId(), refreshToken, expirationInSeconds);
+
+        var userInfo = UserLoginInfo.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .avataUrl(user.getAvtUrl())
+                .build();
+
+        return JwtResponse.builder()
+                .accessToken(token)
+                .userLoginInfo(userInfo)
+                .build();
     }
 
     @Override

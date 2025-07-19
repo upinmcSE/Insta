@@ -1,11 +1,14 @@
 package init.upinmcse.backend.config.security;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Objects;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.nimbusds.jose.JOSEException;
 import init.upinmcse.backend.exception.TokenExpiredException;
 import init.upinmcse.backend.repository.db.TokenRevokedRepository;
+import init.upinmcse.backend.service.IJwtService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,10 +32,15 @@ public class CustomJwtDecoder implements JwtDecoder {
     @NonFinal
     NimbusJwtDecoder nimbusJwtDecoder = null;
 
-    TokenRevokedRepository tokenRevokedRepository;
+    IJwtService jwtService;
 
     @Override
     public Jwt decode(String token) throws JwtException {
+        try {
+            jwtService.validateToken(token, false);
+        } catch (JOSEException | ParseException e) {
+            throw new JwtException(e.getMessage());
+        }
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "HS512");
             nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
@@ -40,24 +48,6 @@ public class CustomJwtDecoder implements JwtDecoder {
                     .build();
         }
 
-        try {
-            Jwt jwt = nimbusJwtDecoder.decode(token);
-
-            // Kiểm tra token hết hạn
-            if (jwt.getExpiresAt() != null && jwt.getExpiresAt().isBefore(Instant.now())) {
-                throw new TokenExpiredException("Token expired");
-            }
-
-            String jwtId = jwt.getId();
-            if (jwtId != null && tokenRevokedRepository.existsById(jwtId)) {
-                throw new JwtException("Token revoked");
-            }
-            return jwt;
-        } catch (JwtValidationException ex) {
-            if (ex.getMessage().contains("expired")) {
-                throw new TokenExpiredException("Token expired", ex);
-            }
-            throw new BadJwtException("Invalid token", ex);
-        }
+        return nimbusJwtDecoder.decode(token);
     }
 }

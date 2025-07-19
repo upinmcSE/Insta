@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,32 +41,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Cấu hình cors
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
         http.authorizeHttpRequests(
                         config -> config
                                 .requestMatchers(Endpoints.PUBLIC_ENPOINT).permitAll()
                                 .anyRequest().authenticated());
-
         http.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(jwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint())
         );
-        http.exceptionHandling(exception -> exception
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint())
-        );
+        http.addFilterBefore(new JwtExceptionFilter(), BearerTokenAuthenticationFilter.class);
 
-        // Xử lý đăng xuất
         http.logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
                 .addLogoutHandler(logoutHandler)
                 .logoutSuccessHandler((request, response, authentication) -> {
                     SecurityContextHolder.clearContext();
                 }));
 
-        // Không lưu trạng phiên người dùng
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.httpBasic(Customizer.withDefaults());
         http.csrf(AbstractHttpConfigurer::disable);

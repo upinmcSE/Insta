@@ -1,5 +1,258 @@
-2025-07-18T11:45:37.511+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2025-07-18T11:45:37.521+07:00  INFO 4796 --- [Poops] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2025-07-18T11:45:37.548+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-07-18T11:45:37.551+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2025-07-18T11:45:37.574+07:00  INFO 4796 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-07-19T15:12:04.949+07:00  INFO 25132 --- [Poops] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-07-19T15:12:04.958+07:00  INFO 25132 --- [Poops] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-07-19T15:12:05.013+07:00  INFO 25132 --- [Poops] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-19T15:12:05.016+07:00  INFO 25132 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-07-19T15:12:05.032+07:00  INFO 25132 --- [Poops] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-07-19T15:12:12.275+07:00 DEBUG 16400 --- [Poops] [main] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'logFilter' configured for use
+2025-07-19T15:12:17.107+07:00 DEBUG 16400 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-19T15:12:17.426+07:00 DEBUG 16400 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-19T15:12:32.049+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/login
+2025-07-19T15:12:32.060+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:12:32.062+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/login
+2025-07-19T15:12:32.078+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-1] o.s.w.f.CommonsRequestLoggingFilter      : Before request [POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"1a615878-46d6-46fb-9bb8-5db49946a8fb", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"]]
+2025-07-19T15:12:33.095+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-1] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST DATA: POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"1a615878-46d6-46fb-9bb8-5db49946a8fb", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"], payload={
+    "email":"thanhdt3019@gmail.com",
+    "password":"Thanh123@"
+}]
+2025-07-19T15:15:06.247+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:15:14.088+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:15:21.937+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:16:54.375+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-10] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/login
+2025-07-19T15:16:54.376+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:16:54.377+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-10] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/login
+2025-07-19T15:16:54.378+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-10] o.s.w.f.CommonsRequestLoggingFilter      : Before request [POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"795fb6f7-28f4-496d-b18c-2ca0b3153250", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"]]
+2025-07-19T15:16:54.556+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-10] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST DATA: POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"795fb6f7-28f4-496d-b18c-2ca0b3153250", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"], payload={
+    "email":"thanhdt3019@gmail.com",
+    "password":"Thanh123@"
+}]
+2025-07-19T15:17:01.839+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:17:01.994+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-19T15:17:01.994+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@3557ce4, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-19T15:17:01.995+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /api/v1/users/me
+2025-07-19T15:17:01.996+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : Before request [GET /api/v1/users/me, headers=[authorization:"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTMwNDQsImlhdCI6MTc1MjkxMzAxNCwianRpIjoiODgzZmM5OGYtNWU3Yy00OWFhLWE2ZWQtNTNjMTdiODgwNjIxIiwic2NvcGUiOiJST0xFX1VTRVIifQ.NqVfk6MCYviD68M_OYzaj-tZjkXmJt9LJoAcfwcpj0394bLTvMaM8mNAmYrQNFjLznsO5wnvwXfIcoe3EO19YA", user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"8dfec573-93a5-4619-8d05-394cb4b78ff6", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive"]]
+2025-07-19T15:17:02.034+07:00 DEBUG 16400 --- [Poops] [http-nio-8181-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST DATA: GET /api/v1/users/me, headers=[authorization:"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTMwNDQsImlhdCI6MTc1MjkxMzAxNCwianRpIjoiODgzZmM5OGYtNWU3Yy00OWFhLWE2ZWQtNTNjMTdiODgwNjIxIiwic2NvcGUiOiJST0xFX1VTRVIifQ.NqVfk6MCYviD68M_OYzaj-tZjkXmJt9LJoAcfwcpj0394bLTvMaM8mNAmYrQNFjLznsO5wnvwXfIcoe3EO19YA", user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"8dfec573-93a5-4619-8d05-394cb4b78ff6", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive"]]
+2025-07-19T15:22:48.055+07:00 DEBUG 13848 --- [Poops] [main] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'logFilter' configured for use
+2025-07-19T15:22:52.180+07:00 DEBUG 13848 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-19T15:22:52.499+07:00 DEBUG 13848 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-19T15:23:18.017+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-6] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:23:22.401+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/login
+2025-07-19T15:23:22.405+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:23:22.407+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/login
+2025-07-19T15:23:22.417+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-3] o.s.w.f.CommonsRequestLoggingFilter      : Before request [POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"1cb214f7-58cc-46a5-9f08-3aa6ac7ad2c4", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"]]
+2025-07-19T15:23:23.252+07:00 DEBUG 13848 --- [Poops] [http-nio-8181-exec-3] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST DATA: POST /api/v1/auth/login, headers=[user-agent:"PostmanRuntime/7.44.1", accept:"*/*", cache-control:"no-cache", postman-token:"1cb214f7-58cc-46a5-9f08-3aa6ac7ad2c4", host:"localhost:8181", accept-encoding:"gzip, deflate, br", connection:"keep-alive", content-length:"70", Content-Type:"application/json;charset=UTF-8"], payload={
+    "email":"thanhdt3019@gmail.com",
+    "password":"Thanh123@"
+}]
+2025-07-19T15:27:31.320+07:00 DEBUG 22780 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-19T15:27:31.764+07:00 DEBUG 22780 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-19T15:27:45.119+07:00 DEBUG 22780 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/login
+2025-07-19T15:27:45.126+07:00 DEBUG 22780 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:27:45.127+07:00 DEBUG 22780 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/login
+2025-07-19T15:27:45.793+07:00  INFO 22780 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/auth/login
+Body: {
+    "email":"thanhdt3019@gmail.com",
+    "password":"***"
+}
+2025-07-19T15:27:45.794+07:00  INFO 22780 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Login successfully","result":{"accessToken":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTM2OTUsImlhdCI6MTc1MjkxMzY2NSwianRpIjoiY2I1YzQ5NDUtMWIwNS00MDQ2LWI3YTYtZWU5ZjlhYjNjYWFmIiwic2NvcGUiOiJST0xFX1VTRVIifQ.NFrLV60AsvkhUCTIDbkeO71vvqlNEHrAYOZnFsVz7BR_N60IM-Q_OyzqOlFyvmMdgrAirxK3b1JCw6isqRnqcw","userLoginInfo":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avataUrl":null}}}
+2025-07-19T15:30:04.065+07:00 DEBUG 22780 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:44:20.251+07:00 DEBUG 6444 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-19T15:44:20.556+07:00 DEBUG 6444 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-19T15:45:20.575+07:00 DEBUG 6444 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:46:45.551+07:00 DEBUG 6444 --- [Poops] [http-nio-8181-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/refresh-token
+2025-07-19T15:46:45.555+07:00 DEBUG 6444 --- [Poops] [http-nio-8181-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:46:45.567+07:00 DEBUG 6444 --- [Poops] [http-nio-8181-exec-5] s.w.a.DelegatingAuthenticationEntryPoint : Trying to match using Or [org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer$BearerTokenRequestMatcher@2685c3a2, RequestHeaderRequestMatcher [expectedHeaderName=X-Requested-With, expectedHeaderValue=XMLHttpRequest], And [Not [MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@50603313, matchingMediaTypes=[text/html], useEquals=false, ignoredMediaTypes=[]]], MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@50603313, matchingMediaTypes=[application/atom+xml, application/x-www-form-urlencoded, application/json, application/octet-stream, application/xml, multipart/form-data, text/xml], useEquals=false, ignoredMediaTypes=[*/*]]], MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@50603313, matchingMediaTypes=[*/*], useEquals=true, ignoredMediaTypes=[]]]
+2025-07-19T15:46:45.574+07:00 DEBUG 6444 --- [Poops] [http-nio-8181-exec-5] s.w.a.DelegatingAuthenticationEntryPoint : Match found! Executing init.upinmcse.backend.config.security.JwtAuthenticationEntryPoint@6dc4b990
+2025-07-19T15:47:17.095+07:00 DEBUG 17072 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-19T15:47:17.377+07:00 DEBUG 17072 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-19T15:47:32.181+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/refresh-token
+2025-07-19T15:47:32.189+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:47:32.190+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/refresh-token
+2025-07-19T15:47:32.949+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/auth/refresh-token
+Body: {
+    "token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTM2OTUsImlhdCI6MTc1MjkxMzY2NSwianRpIjoiY2I1YzQ5NDUtMWIwNS00MDQ2LWI3YTYtZWU5ZjlhYjNjYWFmIiwic2NvcGUiOiJST0xFX1VTRVIifQ.NFrLV60AsvkhUCTIDbkeO71vvqlNEHrAYOZnFsVz7BR_N60IM-Q_OyzqOlFyvmMdgrAirxK3b1JCw6isqRnqcw",
+    "userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281"
+}
+2025-07-19T15:47:32.950+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Refresh token successfully","result":{"accessToken":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTQ4ODIsImlhdCI6MTc1MjkxNDg1MiwianRpIjoiODg1Y2QzMDMtZjEzNy00Y2UxLTgwODktNDllNDM0OTY0MDNmIiwic2NvcGUiOiJST0xFX1VTRVIifQ.zC6_-nK0zYETxc0wCjEHsWIlySw8WptOu03ydzBE9eIgTa3nuweuUnzwn35gWvr-9tJE0Dmtzv5FCcZcwy3Mkg","userLoginInfo":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avataUrl":null}}}
+2025-07-19T15:48:00.207+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-10] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:48:00.247+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-10] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-19T15:48:00.248+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-10] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f22306c2, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-19T15:48:00.249+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-10] o.s.security.web.FilterChainProxy        : Secured GET /api/v1/users/me
+2025-07-19T15:48:00.277+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-10] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+GET /api/v1/users/me
+Body: 
+2025-07-19T15:48:00.278+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-10] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Get me successfully","result":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","email":"thanhdt3019@gmail.com","fullName":"Upin","avtUrl":null,"bio":null,"followers":[],"following":[]}}
+2025-07-19T15:48:55.324+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-4] o.s.security.web.FilterChainProxy        : Securing POST /poops/api/v1/auth/logout
+2025-07-19T15:49:09.911+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/refresh-token
+2025-07-19T15:49:09.911+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:49:09.912+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-5] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/refresh-token
+2025-07-19T15:49:09.973+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-5] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/auth/refresh-token
+Body: {
+    "token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTQ4ODIsImlhdCI6MTc1MjkxNDg1MiwianRpIjoiODg1Y2QzMDMtZjEzNy00Y2UxLTgwODktNDllNDM0OTY0MDNmIiwic2NvcGUiOiJST0xFX1VTRVIifQ.zC6_-nK0zYETxc0wCjEHsWIlySw8WptOu03ydzBE9eIgTa3nuweuUnzwn35gWvr-9tJE0Dmtzv5FCcZcwy3Mkg",
+    "userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281"
+}
+2025-07-19T15:49:09.974+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-5] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Refresh token successfully","result":{"accessToken":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTQ5NzksImlhdCI6MTc1MjkxNDk0OSwianRpIjoiNWM3ODc3YmItMzc0NS00YmI4LWE0YjQtMTAxNGM3YjI3NmJjIiwic2NvcGUiOiJST0xFX1VTRVIifQ.5m1RGjH6augf6yIDwB2uEYnEPyPjnanCps6YBaIWGgTGTiiyD0Iuw6AYitWu2ZMwZuPN44mc1dxlthRnc6yivg","userLoginInfo":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avataUrl":null}}}
+2025-07-19T15:49:18.173+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:49:18.190+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-7] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-19T15:49:18.190+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-7] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@c5bee62b, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-19T15:49:18.191+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /api/v1/users/me
+2025-07-19T15:49:18.229+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-7] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+GET /api/v1/users/me
+Body: 
+2025-07-19T15:49:18.230+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-7] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Get me successfully","result":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","email":"thanhdt3019@gmail.com","fullName":"Upin","avtUrl":null,"bio":null,"followers":[],"following":[]}}
+2025-07-19T15:49:22.799+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.security.web.FilterChainProxy        : Securing POST /poops/api/v1/auth/logout
+2025-07-19T15:49:22.827+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-19T15:49:22.828+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@c5bee62b, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-19T15:49:22.829+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.security.web.FilterChainProxy        : Secured POST /poops/api/v1/auth/logout
+2025-07-19T15:49:22.842+07:00 ERROR 17072 --- [Poops] [http-nio-8181-exec-8] GlobalExceptionHandler                   : Unexpected error
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource poops/api/v1/auth/logout.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.39.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at init.upinmcse.backend.config.init.LoggingFilter.doFilter(LoggingFilter.java:30) ~[classes/:na]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.www.BasicAuthenticationFilter.doFilterInternal(BasicAuthenticationFilter.java:181) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter.doFilterInternal(BearerTokenAuthenticationFilter.java:145) ~[spring-security-oauth2-resource-server-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at init.upinmcse.backend.config.security.JwtExceptionFilter.doFilterInternal(JwtExceptionFilter.java:22) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:243) ~[spring-webmvc-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:238) ~[spring-security-config-6.4.4.jar:6.4.4]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.5.jar:6.2.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1743) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.39.jar:10.1.39]
+	at java.base/java.lang.Thread.run(Thread.java:1575) ~[na:na]
+
+2025-07-19T15:49:22.857+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-8] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /poops/api/v1/auth/logout
+Body: 
+2025-07-19T15:49:22.858+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-8] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 500
+Body: {"code":1000,"message":"No static resource poops/api/v1/auth/logout."}
+2025-07-19T15:51:19.765+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-9] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/logout
+2025-07-19T15:51:19.766+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-9] o.s.s.w.a.logout.LogoutFilter            : Logging out [null]
+2025-07-19T15:52:51.100+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/refresh-token
+2025-07-19T15:52:51.100+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:52:51.101+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/refresh-token
+2025-07-19T15:52:51.150+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/auth/refresh-token
+Body: {
+    "token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTQ4ODIsImlhdCI6MTc1MjkxNDg1MiwianRpIjoiODg1Y2QzMDMtZjEzNy00Y2UxLTgwODktNDllNDM0OTY0MDNmIiwic2NvcGUiOiJST0xFX1VTRVIifQ.zC6_-nK0zYETxc0wCjEHsWIlySw8WptOu03ydzBE9eIgTa3nuweuUnzwn35gWvr-9tJE0Dmtzv5FCcZcwy3Mkg",
+    "userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281"
+}
+2025-07-19T15:52:51.150+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Refresh token successfully","result":{"accessToken":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTUyMDEsImlhdCI6MTc1MjkxNTE3MSwianRpIjoiNzFmNjhmY2YtNmNiMi00NjA1LTg1ODktNGI2NjY3YjllMmNkIiwic2NvcGUiOiJST0xFX1VTRVIifQ.Q0Zo20nqWGZSVJ53ihWchn6SgZ7paR0DE3pahBuNEXKuFi9ShB05CGl_R9ygApsQDZSViX2ZwzZpgMmOhksEYg","userLoginInfo":{"id":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avataUrl":null}}}
+2025-07-19T15:54:00.648+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/logout
+2025-07-19T15:54:00.649+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-5] o.s.s.w.a.logout.LogoutFilter            : Logging out [null]
+2025-07-19T15:54:16.239+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/users/me
+2025-07-19T15:54:24.501+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/auth/refresh-token
+2025-07-19T15:54:24.501+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2025-07-19T15:54:24.503+07:00 DEBUG 17072 --- [Poops] [http-nio-8181-exec-8] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/auth/refresh-token
+2025-07-19T15:54:24.548+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-8] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/auth/refresh-token
+Body: {
+    "token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aGFuaGR0MzAxOUBnbWFpbC5jb20iLCJleHAiOjE3NTI5MTUyMDEsImlhdCI6MTc1MjkxNTE3MSwianRpIjoiNzFmNjhmY2YtNmNiMi00NjA1LTg1ODktNGI2NjY3YjllMmNkIiwic2NvcGUiOiJST0xFX1VTRVIifQ.Q0Zo20nqWGZSVJ53ihWchn6SgZ7paR0DE3pahBuNEXKuFi9ShB05CGl_R9ygApsQDZSViX2ZwzZpgMmOhksEYg",
+    "userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281"
+}
+2025-07-19T15:54:24.548+07:00  INFO 17072 --- [Poops] [http-nio-8181-exec-8] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 401
+Body: {"code":4012,"message":"Token không hợp lệ"}

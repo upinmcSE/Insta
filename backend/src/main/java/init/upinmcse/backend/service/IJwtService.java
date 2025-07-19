@@ -1,6 +1,7 @@
 package init.upinmcse.backend.service;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 
 import java.text.ParseException;
@@ -11,7 +12,7 @@ public interface IJwtService {
 
     String extractJwtId(String token, TYPE_TOKEN typeToken) throws ParseException;
 
-    void validateToken(String token) throws JOSEException, ParseException;
+    SignedJWT validateToken(String token, boolean isRefresh) throws JOSEException, ParseException;
 
     Date extractExpiration(String token, TYPE_TOKEN typeToken) throws ParseException;
 }

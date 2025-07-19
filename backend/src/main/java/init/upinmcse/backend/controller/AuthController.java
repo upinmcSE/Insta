@@ -75,7 +75,7 @@ public class AuthController {
 
     // UC-4: Refresh token
     @PostMapping("/refresh-token")
-    public BaseResponse<JwtResponse> refreshToken(@Valid @RequestBody RefreshRequest request) {
+    public BaseResponse<JwtResponse> refreshToken(@Valid @RequestBody RefreshRequest request) throws ParseException {
         return BaseResponse.<JwtResponse>builder()
                 .message("Refresh token successfully")
                 .result(authenticationService.refreshToken(request))

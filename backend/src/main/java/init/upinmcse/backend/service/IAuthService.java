@@ -11,7 +11,7 @@ import java.text.ParseException;
 public interface IAuthService {
     RegisterResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException;
     JwtResponse login(LoginRequest request) throws ParseException;
-    JwtResponse refreshToken(RefreshRequest request);
+    JwtResponse refreshToken(RefreshRequest request) throws ParseException;
     void verifyEmail(VerifyRequest request);
     void forgotPassword(ForgotPasswordRequest request);
     void resetPassword(ResetPasswordRequest request);

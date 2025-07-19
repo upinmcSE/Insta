@@ -10,14 +10,16 @@ logging:
   file:
     name: ./log/application.log
   level:
+    root: ERROR
+    init:
+      upinmcse:
+        backend:
+          config:
+            init:
+              LoggingFilter: INFO
     org:
       springframework:
         security: DEBUG
-#        jdbc:
-#          core: TRACE
-        web:
-          filter:
-            CommonsRequestLoggingFilter: DEBUG
 
 spring:
   application:

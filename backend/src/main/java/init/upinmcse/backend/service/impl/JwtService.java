@@ -8,6 +8,7 @@ import com.nimbusds.jwt.SignedJWT;
 import init.upinmcse.backend.enums.TYPE_TOKEN;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
+import init.upinmcse.backend.exception.TokenExpiredException;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.db.TokenRevokedRepository;
 import init.upinmcse.backend.repository.db.UserRepository;
@@ -108,27 +109,35 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public void validateToken(String token) throws JOSEException, ParseException {
+    public SignedJWT validateToken(String token, boolean isRefresh) throws JOSEException, ParseException {
+        if (token == null || token.trim().isEmpty()) {
+            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        }
+
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        // Check signature
-        if (!signedJWT.verify(verifier)) {
-            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
+        Date expiryTime = (isRefresh)
+                ? new Date(signedJWT.getJWTClaimsSet()
+                .getIssueTime()
+                .toInstant()
+                .plus(REFRESH_EXPIRY_SECONDS, ChronoUnit.HOURS)
+                .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        if (expiryTime.before(new Date())) {
+            throw new TokenExpiredException();
         }
 
-        // Check expiration time - throw specific exception for expired token
-        Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-        if (expirationTime.before(new Date())) {
-            throw new ErrorException(ErrorCode.TOKEN_EXPIRED);
+        var verified = signedJWT.verify(verifier);
+        if (!verified) throw new ErrorException(ErrorCode.INVALID_TOKEN);
+
+        if( tokenRevokedRepository.existsById(token)) {
+            throw new ErrorException(ErrorCode.TOKEN_REVOKED);
         }
 
-        // Check token revoked
-        String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
-        if (tokenRevokedRepository.existsById(jwtId)) {
-            throw new ErrorException(ErrorCode.UNAUTHENTICATED);
-        }
-
+        return signedJWT;
     }
 
 }
