@@ -2,7 +2,7 @@ package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.dto.response.FileData;
 import init.upinmcse.backend.dto.response.FileResponse;
-import init.upinmcse.backend.enums.FileType;
+import init.upinmcse.backend.constant.FileType;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.File;

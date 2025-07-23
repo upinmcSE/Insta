@@ -11,10 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -27,6 +24,14 @@ import java.text.ParseException;
 public class AuthController {
 
     IAuthService authenticationService;
+
+    @PostMapping("/outbound/authentication")
+    public BaseResponse<JwtResponse> outboundAuthentication(@RequestParam("code") String code) throws ParseException {
+        return BaseResponse.<JwtResponse>builder()
+                .message("Outbound authentication successful")
+                .result(authenticationService.outboundAuthentication(code))
+                .build();
+    }
 
     // UC-1: Register
     @PostMapping("/register")

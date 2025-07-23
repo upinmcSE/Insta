@@ -1,7 +1,7 @@
 package init.upinmcse.backend.model;
 
 
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;

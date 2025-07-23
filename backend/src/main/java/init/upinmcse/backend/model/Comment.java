@@ -1,6 +1,6 @@
 package init.upinmcse.backend.model;
 
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,11 +46,4 @@ public class Comment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     Status status;
 
-    @Column(name = "created_at", updatable = false)
-    @CreatedDate
-    private Date createdAt;
-
-    @Column(name = "updated_at")
-    @LastModifiedDate
-    private Date updatedAt;
 }

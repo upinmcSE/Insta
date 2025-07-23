@@ -1,11 +1,8 @@
 package init.upinmcse.backend.dto.response;
 
-import init.upinmcse.backend.enums.GENDER;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 

@@ -2,7 +2,7 @@ package init.upinmcse.backend.service;
 
 import init.upinmcse.backend.dto.response.FileData;
 import init.upinmcse.backend.dto.response.FileResponse;
-import init.upinmcse.backend.enums.FileType;
+import init.upinmcse.backend.constant.FileType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

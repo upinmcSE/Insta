@@ -1,6 +1,6 @@
 package init.upinmcse.backend.repository.db;
 
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import init.upinmcse.backend.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +29,7 @@ public interface PostRepostitory extends JpaRepository<Post, Long> {
     @Query("SELECT p.id FROM Post p " +
             "JOIN UserFollowing f ON p.user.id = f.followingUserId " +
             "WHERE f.followerUserId = :followerUserId " +
-            "AND p.status = init.upinmcse.backend.enums.Status.ACTIVE")
+            "AND p.status = init.upinmcse.backend.constant.Status.ACTIVE")
     List<Long> findPostIdsByFollowerUserId(@Param("followerUserId") String followerUserId);
 
 }

@@ -1,6 +1,6 @@
 package init.upinmcse.backend.repository.db;
 
-import init.upinmcse.backend.enums.FileType;
+import init.upinmcse.backend.constant.FileType;
 import init.upinmcse.backend.model.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

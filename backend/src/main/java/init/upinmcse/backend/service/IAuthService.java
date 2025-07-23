@@ -10,6 +10,7 @@ import java.text.ParseException;
 
 public interface IAuthService {
     RegisterResponse register(RegisterRequest request) throws MessagingException, UnsupportedEncodingException;
+    JwtResponse outboundAuthentication(String code) throws ParseException;
     JwtResponse login(LoginRequest request) throws ParseException;
     JwtResponse refreshToken(RefreshRequest request) throws ParseException;
     void verifyEmail(VerifyRequest request);

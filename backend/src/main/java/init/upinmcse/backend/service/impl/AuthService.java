@@ -4,28 +4,32 @@ import init.upinmcse.backend.constant.PredefinedRole;
 import init.upinmcse.backend.dto.request.*;
 import init.upinmcse.backend.dto.response.JwtResponse;
 import init.upinmcse.backend.dto.response.RegisterResponse;
-import init.upinmcse.backend.enums.Status;
-import init.upinmcse.backend.enums.TYPE_TOKEN;
+import init.upinmcse.backend.constant.Status;
+import init.upinmcse.backend.constant.TokenType;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.Role;
-import init.upinmcse.backend.model.TokenRevoked;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.cache.impl.TokenRedis;
 import init.upinmcse.backend.repository.db.RoleRepository;
 import init.upinmcse.backend.repository.db.TokenRevokedRepository;
 import init.upinmcse.backend.repository.db.UserRepository;
+import init.upinmcse.backend.repository.http.OutboundIdentityClient;
+import init.upinmcse.backend.repository.http.OutboundUserClient;
 import init.upinmcse.backend.service.IAuthService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +45,23 @@ public class AuthService implements IAuthService {
     JwtService jwtService;
     TokenRevokedRepository tokenRevokedRepository;
     TokenRedis tokenRedis;
+    OutboundIdentityClient outboundIdentityClient;
+    OutboundUserClient outboundUserClient;
 
+    @NonFinal
+    @Value("${outbound.identity.client-id}")
+    protected String CLIENT_ID;
+
+    @NonFinal
+    @Value("${outbound.identity.client-secret}")
+    protected String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${outbound.identity.redirect-uri}")
+    protected String REDIRECT_URI;
+
+    @NonFinal
+    protected final String GRANT_TYPE = "authorization_code";
 
     private static String generateCode() {
         SecureRandom random = new SecureRandom();
@@ -50,6 +70,71 @@ public class AuthService implements IAuthService {
             code.append(random.nextInt(10));
         }
         return code.toString();
+    }
+
+    private void storeRefreshToken(String userId, String refreshToken) throws ParseException {
+        Date expiration = jwtService.extractExpiration(refreshToken, TokenType.REFRESH_TOKEN);
+        long expirationInSeconds = calculateExpirationInSeconds(expiration);
+        tokenRedis.set(userId, refreshToken, expirationInSeconds);
+    }
+
+    private long calculateExpirationInSeconds(Date expiration) {
+        long currentTimeMillis = System.currentTimeMillis();
+        long expirationTimeMillis = expiration.getTime();
+        long durationInMillis = expirationTimeMillis - currentTimeMillis;
+        long expirationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
+
+        if (expirationInSeconds <= 0) {
+            throw new IllegalArgumentException("Token has already expired");
+        }
+        return expirationInSeconds;
+    }
+
+    @Override
+    public JwtResponse outboundAuthentication(String code) throws ParseException {
+        var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+                .code(code)
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .redirectUri(REDIRECT_URI)
+                .grantType(GRANT_TYPE)
+                .build());
+
+        log.info("TOKEN RESPONSE {}", response);
+
+        var userInfo = outboundUserClient.getUserInfo("json", response.getAccessToken());
+
+        log.info("User Info {}", userInfo);
+
+        User existingUser = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
+                () -> userRepository.save(
+                        User.builder()
+                                .email(userInfo.getEmail())
+                                .fullName(userInfo.getName())
+                                .password("")
+                                .avtUrl(userInfo.getPicture())
+                                .roles(Set.of(
+                                        roleRepository.findByName(PredefinedRole.USER_ROLE)
+                                                .orElseThrow(() -> new ErrorException(ErrorCode.ROLE_NOT_FOUND))
+                                ))
+                                .status(Status.ACTIVE)
+                                .build()
+                )
+        );
+
+        var accessToken = jwtService.generateToken(existingUser.getEmail(), TokenType.ACCESS_TOKEN);
+        var refreshToken = jwtService.generateToken(existingUser.getEmail(), TokenType.REFRESH_TOKEN);
+
+        storeRefreshToken(existingUser.getId(), refreshToken);
+
+        return JwtResponse.builder()
+                .accessToken(accessToken)
+                .userLoginInfo(UserLoginInfo.builder()
+                        .id(existingUser.getId())
+                        .fullName(existingUser.getFullName())
+                        .avatarUrl(existingUser.getAvtUrl())
+                        .build())
+                .build();
     }
 
     @Override
@@ -87,29 +172,16 @@ public class AuthService implements IAuthService {
         if (!authenticated) {
             throw new ErrorException(ErrorCode.UNAUTHENTICATED);
         }
-        var accessToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
-        var refreshToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
-        var expiration = jwtService.extractExpiration(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
 
-        // Tính khoảng thời gian còn lại (từ hiện tại đến expiration) bằng milliseconds
-        long currentTimeMillis = System.currentTimeMillis();
-        long expirationTimeMillis = expiration.getTime();
-        long durationInMillis = expirationTimeMillis - currentTimeMillis;
+        var accessToken = jwtService.generateToken(user.getEmail(), TokenType.ACCESS_TOKEN);
+        var refreshToken = jwtService.generateToken(user.getEmail(), TokenType.REFRESH_TOKEN);
 
-        // Chuyển thành số giây
-        long expirationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
-
-        // Đảm bảo expirationInSeconds không âm
-        if (expirationInSeconds <= 0) {
-            throw new IllegalArgumentException("Token has already expired");
-        }
-
-        tokenRedis.set(user.getId(), refreshToken, expirationInSeconds);
+        storeRefreshToken(user.getId(), refreshToken);
 
         var userInfo = UserLoginInfo.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
-                .avataUrl(user.getAvtUrl())
+                .avatarUrl(user.getAvtUrl())
                 .build();
 
         return JwtResponse.builder()
@@ -118,47 +190,30 @@ public class AuthService implements IAuthService {
                 .build();
     }
 
-
     @Override
     public JwtResponse refreshToken(RefreshRequest request) throws ParseException {
         var user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-        var tokenId = jwtService.extractJwtId(request.getToken(), TYPE_TOKEN.ACCESS_TOKEN);
+        var tokenId = jwtService.extractJwtId(request.getToken(), TokenType.ACCESS_TOKEN);
 
-        // check token logout
         if (tokenId == null || tokenRevokedRepository.existsById(tokenId)) {
             throw new ErrorException(ErrorCode.INVALID_TOKEN);
         }
 
-        // check refresh token in redis
         String refreshToken = tokenRedis.get(request.getUserId());
-        if( refreshToken == null) {
+        if (refreshToken == null) {
             throw new ErrorException(ErrorCode.INVALID_TOKEN);
         }
 
-        var token = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.ACCESS_TOKEN);
-        refreshToken = jwtService.generateToken(user.getEmail(), TYPE_TOKEN.REFRESH_TOKEN);
-        var expiration = jwtService.extractExpiration(refreshToken, TYPE_TOKEN.REFRESH_TOKEN);
+        var token = jwtService.generateToken(user.getEmail(), TokenType.ACCESS_TOKEN);
+        refreshToken = jwtService.generateToken(user.getEmail(), TokenType.REFRESH_TOKEN);
 
-        // Tính khoảng thời gian còn lại (từ hiện tại đến expiration) bằng milliseconds
-        long currentTimeMillis = System.currentTimeMillis();
-        long expirationTimeMillis = expiration.getTime();
-        long durationInMillis = expirationTimeMillis - currentTimeMillis;
-
-        // Chuyển thành số giây
-        long expirationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
-
-        // Đảm bảo expirationInSeconds không âm
-        if (expirationInSeconds <= 0) {
-            throw new IllegalArgumentException("Token has already expired");
-        }
-
-        tokenRedis.set(user.getId(), refreshToken, expirationInSeconds);
+        storeRefreshToken(user.getId(), refreshToken);
 
         var userInfo = UserLoginInfo.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
-                .avataUrl(user.getAvtUrl())
+                .avatarUrl(user.getAvtUrl())
                 .build();
 
         return JwtResponse.builder()
@@ -171,7 +226,6 @@ public class AuthService implements IAuthService {
     public void verifyEmail(VerifyRequest request) {
         log.info("email: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-
     }
 
     @Override
