@@ -1,12 +1,8 @@
 package init.upinmcse.backend.model;
 
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.util.Date;
 
 @Getter
 @Setter

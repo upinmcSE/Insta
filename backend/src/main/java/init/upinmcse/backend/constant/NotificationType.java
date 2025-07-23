@@ -1,4 +1,4 @@
-package init.upinmcse.backend.enums;
+package init.upinmcse.backend.constant;
 
 public enum NotificationType {
     LIKE,

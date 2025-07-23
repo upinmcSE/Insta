@@ -5,7 +5,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import init.upinmcse.backend.enums.TYPE_TOKEN;
+import init.upinmcse.backend.constant.TokenType;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.exception.TokenExpiredException;
@@ -48,10 +48,10 @@ public class JwtService implements IJwtService {
     long REFRESH_EXPIRY_SECONDS;
 
     @Override
-    public String generateToken(String email, TYPE_TOKEN typeToken) {
+    public String generateToken(String email, TokenType typeToken) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-        long expiryTimeInSeconds = typeToken == TYPE_TOKEN.ACCESS_TOKEN ? ACCESS_EXPIRY_SECONDS : REFRESH_EXPIRY_SECONDS;
+        long expiryTimeInSeconds = typeToken == TokenType.ACCESS_TOKEN ? ACCESS_EXPIRY_SECONDS : REFRESH_EXPIRY_SECONDS;
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(email)
@@ -75,7 +75,7 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public Date extractExpiration(String token, TYPE_TOKEN typeToken) throws ParseException {
+    public Date extractExpiration(String token, TokenType typeToken) throws ParseException {
         SignedJWT signedJWT = SignedJWT.parse(token);
         JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
 
@@ -99,7 +99,7 @@ public class JwtService implements IJwtService {
 
 
     @Override
-    public String extractJwtId(String token, TYPE_TOKEN typeToken) throws ParseException {
+    public String extractJwtId(String token, TokenType typeToken) throws ParseException {
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         if (signedJWT.getJWTClaimsSet() != null && signedJWT.getJWTClaimsSet().getJWTID() != null) {

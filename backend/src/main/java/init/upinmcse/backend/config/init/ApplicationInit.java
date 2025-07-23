@@ -3,7 +3,7 @@ package init.upinmcse.backend.config.init;
 import java.util.HashSet;
 
 import init.upinmcse.backend.constant.PredefinedRole;
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import init.upinmcse.backend.model.Role;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.db.RoleRepository;

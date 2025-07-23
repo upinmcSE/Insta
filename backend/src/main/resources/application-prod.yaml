@@ -1,0 +1,3 @@
+jwt:
+  accessExpiryMinutes: 7200
+  refreshExpiryMinutes: 72000

@@ -19,12 +19,11 @@ logging:
               LoggingFilter: INFO
     org:
       springframework:
-        security: DEBUG
+        security: TRACE
 
 spring:
   application:
     name: Poops
-
 
   servlet:
     multipart:
@@ -32,10 +31,10 @@ spring:
       max-request-size: 5MB
 
   datasource:
-    url: "jdbc:mysql://localhost:3306/insta"
+    url: ${DBMS_CONNECTION:jdbc:jdbc:mysql://localhost:3306/insta}
     driverClassName: "com.mysql.cj.jdbc.Driver"
-    username: root
-    password: root
+    username: ${DBMS_USERNAME:root}
+    password: ${DBMS_PASSWORD:root}
 
   jpa:
     hibernate:
@@ -46,7 +45,6 @@ spring:
     redis:
       host: localhost
       port: 6379
-
 
 #  rabbitmq:
 #    host: rabbitmq
@@ -59,11 +57,11 @@ spring:
 #        passcode: guest
 
   mail:
-    from: upinmc123@gmail.com
+    from: ${MAIL}
     host: smtp.gmail.com
     port: 587
-    username: upinmc123
-    password: fczfnxqdcyziezzu
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -73,11 +71,17 @@ spring:
             required: true
 
 jwt:
-  secretKey: "hPYEmmjvdCO7QG73HF3kPYbv6yLKAvGzbtHZC/JS3tKhyyP9rM/RG6pdJEozyJJsFkjxkuwe/Ypx57rf7wMbZumA4Dg+6bkGUyWIlOlsdHs="
-  accessExpiryMinutes: 30 # 60s
+  secretKey: ${JWT_SIGNERKEY}
+  accessExpiryMinutes: 60 # 60s
   refreshExpiryMinutes: 3600 # 1h
 
 app:
   file:
     storage-dir: D:/github.com/Insta/backend/upload
     download-prefix: http://localhost:8181/poops/api/v1/files/media/download
+
+outbound:
+  identity:
+    client-id: ${CLIENT_ID}
+    client-secret: ${CLIENT_SECRET}
+    redirect-uri: "http://localhost:3000/authentication"

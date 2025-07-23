@@ -1,7 +1,7 @@
 package init.upinmcse.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import init.upinmcse.backend.enums.NotificationType;
+import init.upinmcse.backend.constant.NotificationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

@@ -2,7 +2,7 @@ package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.dto.common.PageResponse;
 import init.upinmcse.backend.dto.response.PostResponse;
-import init.upinmcse.backend.enums.Status;
+import init.upinmcse.backend.constant.Status;
 import init.upinmcse.backend.model.File;
 import init.upinmcse.backend.repository.db.FeedRepository;
 import init.upinmcse.backend.repository.db.FileRepository;

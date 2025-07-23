@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 public class UserLoginInfo {
     String id;
     String fullName;
-    String avataUrl;
+    String avatarUrl;
 
 }

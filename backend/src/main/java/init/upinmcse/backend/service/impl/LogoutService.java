@@ -1,6 +1,6 @@
 package init.upinmcse.backend.service.impl;
 
-import init.upinmcse.backend.enums.TYPE_TOKEN;
+import init.upinmcse.backend.constant.TokenType;
 import init.upinmcse.backend.model.TokenRevoked;
 import init.upinmcse.backend.repository.cache.impl.TokenRedis;
 import init.upinmcse.backend.repository.db.TokenRevokedRepository;
@@ -41,7 +41,7 @@ public class LogoutService implements LogoutHandler {
         jwt = authHeader.substring(7);
         log.info("JWT token: {}", jwt);
         try {
-            String id = jwtService.extractJwtId(jwt, TYPE_TOKEN.ACCESS_TOKEN);
+            String id = jwtService.extractJwtId(jwt, TokenType.ACCESS_TOKEN);
             log.info("Extracted ID: {}", id);
             if( id == null) {
                 log.error("Id is null, cannot revoke token");
@@ -52,7 +52,7 @@ public class LogoutService implements LogoutHandler {
             if (storedToken == null) {
                 storedToken = TokenRevoked.builder()
                         .id(id)
-                        .expiryTime(jwtService.extractExpiration(jwt, TYPE_TOKEN.ACCESS_TOKEN))
+                        .expiryTime(jwtService.extractExpiration(jwt, TokenType.ACCESS_TOKEN))
                         .build();
                 tokenRevokedRepository.save(storedToken);
             }

@@ -1,6 +1,6 @@
 package init.upinmcse.backend.model;
 
-import init.upinmcse.backend.enums.FileType;
+import init.upinmcse.backend.constant.FileType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

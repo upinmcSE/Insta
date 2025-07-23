@@ -4,7 +4,7 @@ import init.upinmcse.backend.dto.common.PageResponse;
 import init.upinmcse.backend.dto.request.ChangePasswordRequest;
 import init.upinmcse.backend.dto.request.UpdateInfo;
 import init.upinmcse.backend.dto.response.UserResponse;
-import init.upinmcse.backend.enums.FileType;
+import init.upinmcse.backend.constant.FileType;
 import init.upinmcse.backend.exception.ErrorCode;
 import init.upinmcse.backend.exception.ErrorException;
 import init.upinmcse.backend.model.File;
