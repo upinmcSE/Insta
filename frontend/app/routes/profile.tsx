@@ -8,12 +8,11 @@ const Profile: React.FC = () => {
     const [user, setUser] = useState<UserProfile | null>({
         id: "user123",
         email: "duongtrungthanh@example.com",
-        avatar_picture: "/assets/unknow.png",
-        fullname: "Duong Trung Thanh",
+        avtUrl: "/assets/unknow.png",
+        fullName: "Duong Trung Thanh",
         bio: "Just a coder with a love for cats and tech. Hopefully...",
-        follower_count: 150,
-        following_count: 200,
-        is_following: false,
+        followers: [],
+        following: [],
     });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -26,7 +25,6 @@ const Profile: React.FC = () => {
         setFollowLoading(true);
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
-        setUser(prev => prev ? { ...prev, is_following: !prev.is_following } : prev);
         setFollowLoading(false);
     };
 
@@ -53,15 +51,15 @@ const Profile: React.FC = () => {
                 <div className="flex flex-col md:flex-row items-center md:items-start mb-10 p-4">
                     <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden flex-shrink-0 mb-4 md:mb-0 md:mr-10">
                         <img 
-                            src={user?.avatar_picture || "/assets/unknow.png"} 
-                            alt={user?.fullname} 
+                            src={user?.avtUrl || "/assets/unknow.png"} 
+                            alt={user?.fullName} 
                             className="w-full h-full object-cover"
                         />
                     </div>
                     
                     <div className="flex flex-col items-center md:items-start">
                         <div className="flex items-center mb-4">
-                            <h1 className="text-xl md:text-2xl font-light mr-4">{user?.fullname}</h1>
+                            <h1 className="text-xl md:text-2xl font-light mr-4">{user?.fullName}</h1>
                             
                             {isCurrentUserProfile ? (
                                 <button 
@@ -73,22 +71,22 @@ const Profile: React.FC = () => {
                             ) : (
                                 <button 
                                     className={`px-6 py-1.5 rounded text-sm font-semibold ${
-                                        user?.is_following
+                                        true
                                             ? 'bg-instagram-lightGray text-black' 
                                             : 'bg-instagram-blue text-white'
                                     }`}
                                     onClick={handleFollow}
                                     disabled={followLoading}
                                 >
-                                    {user?.is_following ? 'Following' : 'Follow'}
+                                    {false ? 'Following' : 'Follow'}
                                 </button>
                             )}
                         </div>
                         
                         <div className="flex space-x-6 mb-4 text-sm">
                             <div><span className="font-semibold">{posts.length}</span> posts</div>
-                            <div><span className="font-semibold">{user?.follower_count}</span> followers</div>
-                            <div><span className="font-semibold">{user?.following_count}</span> following</div>
+                            <div><span className="font-semibold">{user?.followers.length || 0}</span> followers</div>
+                            <div><span className="font-semibold">{user?.following.length || 0}</span> following</div>
                         </div>
                         
                         <div className="text-sm">

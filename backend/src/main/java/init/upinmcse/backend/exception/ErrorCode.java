@@ -17,6 +17,7 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(4007, "Không tìm thấy vai trò", HttpStatus.BAD_REQUEST),
     USER_ALREADY_EXISTS(4008, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
     FILE_NOT_FOUND(4009, "Không tìm thấy file", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED(4009, "Tải lên file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     TOKEN_EXPIRED(4010, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
     TOKEN_REVOKED(4011, "Token đã bị thu hồi", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN(4012, "Token không hợp lệ", HttpStatus.UNAUTHORIZED),

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedController {
     IFeedService feedService;
 
-    @GetMapping("/global")
+    @GetMapping("/dynamic")
     public BaseResponse<PageResponse<PostResponse>> getGlobalFeed(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
@@ -30,7 +30,7 @@ public class FeedController {
                 .build();
     }
 
-    @GetMapping("/following")
+    @GetMapping("/precomputed")
     public BaseResponse<PageResponse<PostResponse>> getFollowingFeed(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,

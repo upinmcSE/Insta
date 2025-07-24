@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router';
 import { redirect } from "react-router";
 import { isAuthenticated, login } from '@/services/auth';
 import { setToken, setUser } from '@/services/storage';
+import { OAuthConfig } from '@/config/configuration';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login: React.FC = () => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated() != null) {
+    if (isAuthenticated()) {
       navigate("/")
     }
   }, [navigate]);
@@ -21,17 +22,28 @@ const Login: React.FC = () => {
     console.log('Email:', email, 'Password:', password);
      try {
       const response = await login(email, password);
-      console.log("Response body:", response.result.userLoginInfo);
       setToken(response.result.accessToken)
       setUser(response.result.userLoginInfo)
-      redirect("/");
+      navigate("/");
     } catch (error) {
       console.log(error)
     }
 
   };
   
+  const handleClick = async () => {
+    const callbackUrl = OAuthConfig.redirectUri;
+    const authUrl = OAuthConfig.authUri;
+    const googleClientId = OAuthConfig.clientId
 
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+    
+    console.log(targetUrl);
+
+    window.location.href = targetUrl;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
@@ -65,16 +77,21 @@ const Login: React.FC = () => {
           </button>
         </form>
         <div className="text-center my-4 text-gray-500">HOẶC</div>
-        <button className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+        <button 
+          className="w-full flex items-center justify-center gap-2 bg-white text-gray-700 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+          onClick={handleClick}
+        >
           <svg
             className="w-5 h-5"
-            fill="currentColor"
-            viewBox="0 0 24 24"
+            viewBox="0 0 48 48"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z"/>
+            <path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.98 6.98C13.77 14.63 18.47 9.5 24 9.5z"/>
+            <path fill="#34A853" d="M46.98 24.55c0-1.7-.15-3.33-.43-4.9H24v9.3h12.84c-.56 2.98-2.24 5.5-4.78 7.18l7.36 5.73c4.31-3.98 7.56-10.03 7.56-17.31z"/>
+            <path fill="#FBBC05" d="M11.54 28.28c-1.03-1.7-1.63-3.65-1.63-5.78s.6-4.08 1.63-5.78l-8.98-6.98C.86 13.5 0 18.58 0 24s.86 10.5 2.56 14.26l8.98-6.98z"/>
+            <path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.36-5.73c-2.24 1.5-5.09 2.38-8.53 2.38-5.53 0-10.23-5.13-11.46-12.01l-8.98 6.98C6.51 42.62 14.62 48 24 48z"/>
           </svg>
-          Đăng nhập bằng Facebook
+          Đăng nhập bằng Google
         </button>
         <div className="text-center mt-4 text-sm text-gray-600">
           Quên mật khẩu?

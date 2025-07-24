@@ -1,13 +1,27 @@
 import React from 'react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import 'material-icons/iconfont/material-icons.css';
 import { LogOut } from 'lucide-react'
+import { logout } from '@/services/auth';
 
 interface NavbarProps {
   onCreateClick: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+
   return (
     <div className="fixed w-64 h-screen bg-white border-r border-gray-200 p-6 flex flex-col justify-between">
       <div>
@@ -51,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
       </div>
       <div>
         <button
-          //onClick={logout}
+          onClick={handleLogout}
           className="flex items-center p-3 rounded-md hover:bg-gray-100 transition-colors w-full"
         >
           <LogOut className="mr-3" size={24} />

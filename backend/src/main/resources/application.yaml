@@ -78,10 +78,16 @@ jwt:
 app:
   file:
     storage-dir: D:/github.com/Insta/backend/upload
-    download-prefix: http://localhost:8181/poops/api/v1/files/media/download
+    download-prefix: http://localhost:8181/api/v1/files/media/download
 
 outbound:
   identity:
     client-id: ${CLIENT_ID}
     client-secret: ${CLIENT_SECRET}
     redirect-uri: "http://localhost:3000/authentication"
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+  bucket-name: ${MINIO_BUCKET_NAME:insta}

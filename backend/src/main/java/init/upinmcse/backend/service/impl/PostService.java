@@ -79,6 +79,8 @@ public class PostService implements IPostService {
         return PostResponse.builder()
                 .postId(post.getId())
                 .userId(user.getId())
+                .fullName(user.getFullName())
+                .avtUrl(user.getAvtUrl())
                 .caption(post.getCaption())
                 .fileUrls(fileResponses.stream().map(FileResponse::getUrl).toList())
                 .build();
