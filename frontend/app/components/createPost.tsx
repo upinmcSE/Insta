@@ -25,7 +25,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ isOpen, onClose, onSubmit }) =>
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const fileList = Array.from(e.target.files);
-      setImages((prev) => [...prev, ...fileList]); // thêm chứ không ghi đè
+      setImages((prev) => [...prev, ...fileList]);
     }
   };
 

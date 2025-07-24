@@ -12,22 +12,23 @@ import init.upinmcse.backend.service.IFileService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+//@Primary
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class FileService implements IFileService {
-//    @Qualifier(value = "localStoreFile")
+public class LocalFileService implements IFileService {
     FileStoreRepository fileStoreRepository;
     FileRepository fileRepository;
 
     @Override
     public FileResponse uploadFile(MultipartFile file, Long postId, String userId, FileType fileType) throws IOException {
-        // store file
+
         var fileInfo = fileStoreRepository.store(file);
 
         // save file info to database

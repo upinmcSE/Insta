@@ -3,132 +3,22 @@ import { useNavigate } from 'react-router';
 import Navbar from '../components/navbar';
 import { NavLink } from 'react-router';
 import CreatPost from '@/components/createPost';
-import type { Post as PostType, User, UserProfile, Comment } from '@/types/types';
-import Post from '@/components/post';
+import { type Post as PostType, type User, type UserProfile, type Comment } from '@/types/types';
 import { isAuthenticated } from '@/services/auth';
 import { getUser, getToken } from '@/services/storage';
-
-// Mock User
-const mockUser1: User = {
-  id: 'user1',
-  fullName: 'John Doe',
-  avatarUrl: undefined,
-};
-
-const mockUser2: User = {
-  id: 'user2',
-  fullName: 'Jane Smith',
-  avatarUrl: undefined,
-};
-
-// Mock Comment
-const mockComments: Comment[] = [
-  {
-    id: 'comment1',
-    post_id: 'post1',
-    user_id: 'user2',
-    content: 'Wow, amazing photo! 😍',
-    reply_comment: [
-      {
-        id: 'reply1',
-        comment_id: 'comment1',
-        user_id: 'user1',
-        content: 'Thanks for the love!',
-        created_at: Date.now() - 1000 * 60 * 5,
-        user: mockUser1,
-      },
-    ],
-    created_at: Date.now() - 1000 * 60 * 10,
-    user: {
-      id: 'user2',
-      fullName: 'Jane Smith',
-      avatarUrl: 'https://via.placeholder.com/40',
-    },
-  },
-  {
-    id: 'comment2',
-    post_id: 'post1',
-    user_id: 'user3',
-    content: 'Where was this taken?',
-    reply_comment: [],
-    created_at: Date.now() - 1000 * 60 * 8,
-    user: {
-      id: 'user3',
-      fullName: 'Alex Johnson',
-      avatarUrl: 'https://via.placeholder.com/40',
-    },
-  },
-  {
-    id: 'comment3',
-    post_id: 'post1',
-    user_id: 'user4',
-    content: 'Love the colors!',
-    reply_comment: [],
-    created_at: Date.now() - 1000 * 60 * 6,
-    user: {
-      id: 'user4',
-      fullName: 'Emma Brown',
-      avatarUrl: 'https://via.placeholder.com/40',
-    },
-  },
-];
-
-// Mock PostWithDetails
-const mockPosts: PostType[] = [
-  {
-    id: 'post1',
-    user_id: 'user1',
-    images: [
-      'https://static.vecteezy.com/system/resources/thumbnails/045/132/934/small_2x/a-beautiful-picture-of-the-eiffel-tower-in-paris-the-capital-of-france-with-a-wonderful-background-in-wonderful-natural-colors-photo.jpg',
-      'https://via.placeholder.com/800x600',
-      'https://via.placeholder.com/500x500',
-    ],
-    caption: 'Chasing sunsets 🌅 #nature #photography',
-    like_count: 150,
-    liked_by_current_user: false,
-    comments: mockComments,
-    created_at: Date.now() - 1000 * 60 * 60 * 2,
-    user: mockUser1,
-  },
-  {
-    id: 'post2',
-    user_id: 'user2',
-    images: [
-      'https://images.unsplash.com/photo-1603984973710-e915353b35fa?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1hemluZyUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D',
-      'https://via.placeholder.com/700x500',
-    ],
-    caption: 'Exploring the mountains 🏔️ #adventure',
-    like_count: 230,
-    liked_by_current_user: false,
-    comments: [
-      {
-        id: 'comment4',
-        post_id: 'post2',
-        user_id: 'user1',
-        content: 'Looks like an epic trip!',
-        reply_comment: [],
-        created_at: Date.now() - 1000 * 60 * 15,
-        user: mockUser2,
-      },
-    ],
-    created_at: Date.now() - 1000 * 60 * 60 * 5,
-    user: {
-      id: 'user2',
-      fullName: 'Jane Smith',
-      avatarUrl: undefined,
-    },
-  },
-];
+import Post from '@/components/post';
+import { dynamicFeed } from '@/services/feed';
+import type { FeedResponse } from '@/types/feed';
+import { createPost } from '@/services/post';
 
 const Home: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<PostType[] | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const navigate = useNavigate();
-  const hasPosts = mockPosts.length > 0;
 
   useEffect(() => {
-    const token = getToken();
-    if (!token || !isAuthenticated()) {
+    if (!isAuthenticated()) {
       navigate('/login');
     } else {
       const userData = getUser();
@@ -139,17 +29,53 @@ const Home: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleComment = async (postId: string, comment: string): Promise<void> => {
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (!isAuthenticated()) {
+        return;
+      }
+
+      try {
+        const response: FeedResponse = await dynamicFeed();
+
+        if (response.result) {
+          setPosts(response.result.data);
+        }else {
+          setPosts([]);
+        }
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setPosts([]);
+      }
+    };
+
+    fetchPosts();
+  }, [user]);
+
+
+  const handleComment = async (postId: number, comment: string): Promise<void> => {
     console.log(`Comment added to post ${postId}: ${comment}`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 
-  const handleUpload = (images: File[] | null, caption: string) => {
-    if (images) {
-      images.forEach((img) => {
-        console.log('Uploading image:', img.name, 'Caption:', caption);
-      });
+  const handleUpload = async (images: File[] | null, caption: string) => {
+    if (!images || images.length === 0) {
+        console.error('No images provided for upload');
+        return;
     }
+
+    try {
+        const response = await createPost(images, caption);
+        console.log('Upload successful:', response);
+        
+        images.forEach((img) => {
+            console.log('Uploaded image:', img.name, 'Caption:', caption);
+        });
+    } catch (error) {
+        console.error('Upload failed:', error);
+        throw error;
+    }
+
   };
 
   return (
@@ -163,11 +89,12 @@ const Home: React.FC = () => {
       <div className="flex flex-1">
         {/* Posts: 2 parts */}
         <div className="w-2/3 max-w-[600px] mx-auto p-4">
-          {hasPosts ? (
-            mockPosts.map((post) => (
+          {posts?.length ? (
+            posts.map((post) => (
               <Post 
-                key={post.id} 
+                key={post.postId} 
                 post={post} 
+                user={user}
                 onComment={handleComment} 
               />
             ))
@@ -192,7 +119,12 @@ const Home: React.FC = () => {
                   <p className="font-semibold">{user?.fullName}</p>
                 </div>
               </div>
-              <button className="text-blue-500">Chuyển</button>
+              <NavLink 
+                className="text-blue-500"
+                to="/profile"
+              >
+                Chuyển
+              </NavLink>
             </div>
           </div>
           <div className="flex justify-between items-center mb-4">

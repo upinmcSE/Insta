@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
-import type { Post as PostType } from '@/types/types';
+import type { Post as PostType, User } from '@/types/types';
 import { getUser } from '@/services/storage';
+import { like, unlike } from '@/services/post';
 
 interface PostProps {
   post: PostType;
-  onComment: (postId: string, comment: string) => Promise<void>;
+  user: User | null;
+  onComment?: (postId: number, comment: string) => Promise<void>;
 }
 
-const Post: React.FC<PostProps> = ({ post, onComment }) => {
-  const [user, setUser] = useState(post.user)
-  const [liked, setLiked] = useState(post.liked_by_current_user || false);
-  const [likeCount, setLikeCount] = useState(post.like_count || 0);
-  const [comment, setComment] = useState('');
+const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likedUserIds.length);
+  const [commentText, setCommentText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Track current image
@@ -36,15 +37,15 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
   };
 
   const handleLike = async () => {
-    if (!user) return;
+    if(!user) return;
 
     try {
       if (liked) {
-        //call api unlike
+        await unlike(post.postId);
         setLiked(false);
         setLikeCount((prev) => Math.max(0, prev - 1));
       } else {
-        //call api like
+        await like(post.postId)
         setLiked(true);
         setLikeCount((prev) => prev + 1);
       }
@@ -55,12 +56,12 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
 
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!comment.trim() || !user || isSubmitting) return;
+    if (!commentText.trim() || !user || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
-      await onComment(post.id, comment);
-      setComment('');
+      
+      setCommentText('');
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,11 +70,11 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % post.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % post.fileUrls.length);
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + post.images.length) % post.images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + post.fileUrls.length) % post.fileUrls.length);
   };
 
 
@@ -81,13 +82,13 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
     <div className="instagram-card">
       {/* Post Header */}
       <div className="flex items-center p-3 mb-4">
-        <Link to={`/profile/${post.user.fullName}`} className="flex items-center">
+        <Link to={`/profile/${post.fullName}`} className="flex items-center">
           <img
-            src={post.user.avatarUrl || '/assets/unknow.png'}
-            alt={post.user.fullName}
+            src={post.avatarUrl || '/assets/unknow.png'}
+            alt={post.fullName}
             className="w-8 h-8 rounded-full object-cover mr-3"
           />
-          <span className="font-semibold">{post.user.fullName}</span>
+          <span className="font-semibold">{post.fullName}</span>
         </Link>
         <button className="ml-auto text-gray-500">
           <MoreHorizontal size={20} />
@@ -97,11 +98,11 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
       {/* Post Image Carousel */}
       <div className="relative">
         <img
-          src={post.images[currentImageIndex]}
+          src={post.fileUrls[currentImageIndex]}
           alt={`Post image ${currentImageIndex + 1}`}
           className="w-full h-[400px] object-cover"
         />
-        {post.images.length > 1 && (
+        {post.fileUrls.length > 1 && (
           <>
             <button
               onClick={handlePrevImage}
@@ -117,7 +118,7 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
             </button>
             {/* Image Indicators */}
             <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-              {post.images.map((_, index) => (
+              {post.fileUrls.map((_, index) => (
                 <div
                   key={index}
                   className={`w-2 h-2 rounded-full ${
@@ -159,14 +160,14 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
 
         {/* Caption */}
         <div className="mb-2">
-          <Link to={`/profile/${post.user.fullName}`} className="font-semibold mr-2">
-            {post.user.fullName}
+          <Link to={`/profile/${post.fullName}`} className="font-semibold mr-2">
+            {post.fullName}
           </Link>
           <span>{post.caption}</span>
         </div>
 
         {/* Comments */}
-        {post.comments.length > 0 && (
+        {/* {post.comments.length > 0 && (
           <div className="mt-1 mb-3">
             {post.comments.length > 2 && !showAllComments && (
               <button
@@ -177,7 +178,7 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
               </button>
             )}
           </div>
-        )}
+        )} */}
 
         {/* Post Date */}
         <div className="text-xs text-instagram-darkGray mt-1">{timeSince(post.created_at)}</div>
@@ -189,15 +190,15 @@ const Post: React.FC<PostProps> = ({ post, onComment }) => {
           type="text"
           placeholder="Add a comment..."
           className="flex-grow bg-transparent focus:outline-none"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
         />
         <button
           type="submit"
           className={`font-semibold ${
-            comment.trim() ? 'text-instagram-blue cursor-pointer' : 'text-instagram-blue opacity-50'
+            commentText.trim() ? 'text-instagram-blue cursor-pointer' : 'text-instagram-blue opacity-50'
           }`}
-          disabled={!comment.trim() || isSubmitting}
+          disabled={!commentText.trim() || isSubmitting}
         >
           Gửi
         </button>

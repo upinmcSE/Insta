@@ -6,44 +6,44 @@ export interface User {
 
 export interface UserProfile {
     id: string;
-    fullname: string;
+    fullName: string;
     email: string;
-    avatar_picture: string;
+    avtUrl: string;
     bio: string;
-    follower_count: number;
-    following_count: number;
-    is_following?: boolean;
+    followers: string[];
+    following: string[];
 }
 
 export interface Post {
-    id: string;
-    user_id: string;
-    images: string[];
+    postId: number;
+    userId: string;
+    fullName: string;
+    avatarUrl: string;
+    fileUrls: string[];
     caption: string;
-    like_count?: number;
-    liked_by_current_user?: boolean;
-    comments: Comment[];
+    likedUserIds: string[];
     created_at: number; // Changed to number timestamp
-    user: User;
 }
 
 export interface ReplyComment {
-    id: string;
-    comment_id: string;
-    user_id: string;
+    replyid: number;
+    commentId: number;
+    userId: string;
+    fullName: string;
+    avtUrl: string;
     content: string;
     created_at: number; // Changed to number timestamp
-    user: User;
 }
 
 export interface Comment {
-    id: string;
-    post_id: string;
-    user_id: string;
+    commentId: number;
+    postId: number;
+    userId: string;
+    fullName: string;
+    avtUrl: string;
     content: string;
     reply_comment: ReplyComment[]
-    created_at: number; // Changed to number timestamp
-    user: User;
+    createdAt: number; // Changed to number timestamp
 }
 
 export interface PostWithDetails {
