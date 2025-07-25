@@ -1,0 +1,146 @@
+2025-07-25T08:15:15.709+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Trying to match request against DefaultSecurityFilterChain defined as 'securityFilterChain' in [class path resource [init/upinmcse/backend/config/security/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Cors, Logout, JwtException, BearerTokenAuthentication, BasicAuthentication, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, SessionManagement, ExceptionTranslation, Authorization] (1/1)
+2025-07-25T08:15:15.711+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/posts
+2025-07-25T08:15:15.712+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking DisableEncodeUrlFilter (1/15)
+2025-07-25T08:15:15.714+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking WebAsyncManagerIntegrationFilter (2/15)
+2025-07-25T08:15:15.714+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderFilter (3/15)
+2025-07-25T08:15:15.731+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking HeaderWriterFilter (4/15)
+2025-07-25T08:15:15.732+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking CorsFilter (5/15)
+2025-07-25T08:15:15.734+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking LogoutFilter (6/15)
+2025-07-25T08:15:15.734+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.w.a.logout.LogoutFilter            : Did not match request to Or [Ant [pattern='/api/v1/auth/logout', GET], Ant [pattern='/api/v1/auth/logout', POST], Ant [pattern='/api/v1/auth/logout', PUT], Ant [pattern='/api/v1/auth/logout', DELETE]]
+2025-07-25T08:15:15.734+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking JwtExceptionFilter (7/15)
+2025-07-25T08:15:15.734+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking BearerTokenAuthenticationFilter (8/15)
+2025-07-25T08:15:15.736+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.authentication.ProviderManager     : Authenticating request with JwtAuthenticationProvider (1/2)
+2025-07-25T08:15:15.834+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] s.o.s.r.a.JwtGrantedAuthoritiesConverter : Looking for scopes in claim scope
+2025-07-25T08:15:15.835+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-25T08:15:15.836+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-3] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:15:15.836+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking BasicAuthenticationFilter (9/15)
+2025-07-25T08:15:15.836+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.w.a.www.BasicAuthenticationFilter  : Did not process authentication request since failed to find username and password in Basic Authorization header
+2025-07-25T08:15:15.836+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking RequestCacheAwareFilter (10/15)
+2025-07-25T08:15:15.836+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderAwareRequestFilter (11/15)
+2025-07-25T08:15:15.837+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking AnonymousAuthenticationFilter (12/15)
+2025-07-25T08:15:15.838+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking SessionManagementFilter (13/15)
+2025-07-25T08:15:15.839+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.w.a.AnonymousAuthenticationFilter  : Did not set SecurityContextHolder since already authenticated JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:15:15.839+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] s.CompositeSessionAuthenticationStrategy : Preparing session with ChangeSessionIdAuthenticationStrategy (1/1)
+2025-07-25T08:15:15.839+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking ExceptionTranslationFilter (14/15)
+2025-07-25T08:15:15.839+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Invoking AuthorizationFilter (15/15)
+2025-07-25T08:15:15.841+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] estMatcherDelegatingAuthorizationManager : Authorizing POST /api/v1/posts
+2025-07-25T08:15:15.843+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] estMatcherDelegatingAuthorizationManager : Checking authorization on POST /api/v1/posts using org.springframework.security.authorization.AuthenticatedAuthorizationManager@22bbadb2
+2025-07-25T08:15:15.843+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-3] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/posts
+2025-07-25T08:15:16.385+07:00  INFO 16420 --- [Poops] [http-nio-8181-exec-3] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/posts
+Body: 
+2025-07-25T08:15:16.388+07:00  INFO 16420 --- [Poops] [http-nio-8181-exec-3] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Post created successfully","result":{"postId":8,"userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avtUrl":null,"caption":"ngôn ngữ Golang","fileUrls":["http://localhost:8181/api/v1/files/media/download/414c33bb-cb53-4212-8a04-1f2438adc6c9.png"],"likedUserIds":null,"createdAt":null}}
+2025-07-25T08:15:16.388+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-3] o.s.s.w.header.writers.HstsHeaderWriter  : Not injecting HSTS header since it did not match request to [Is Secure]
+2025-07-25T08:15:52.435+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Trying to match request against DefaultSecurityFilterChain defined as 'securityFilterChain' in [class path resource [init/upinmcse/backend/config/security/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Cors, Logout, JwtException, BearerTokenAuthentication, BasicAuthentication, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, SessionManagement, ExceptionTranslation, Authorization] (1/1)
+2025-07-25T08:15:52.435+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /api/v1/feeds/precomputed?userId=491f402f-a9fd-4f07-abde-acdc5db1645a
+2025-07-25T08:15:52.436+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking DisableEncodeUrlFilter (1/15)
+2025-07-25T08:15:52.436+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking WebAsyncManagerIntegrationFilter (2/15)
+2025-07-25T08:15:52.437+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderFilter (3/15)
+2025-07-25T08:15:52.437+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking HeaderWriterFilter (4/15)
+2025-07-25T08:15:52.437+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking CorsFilter (5/15)
+2025-07-25T08:15:52.438+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking LogoutFilter (6/15)
+2025-07-25T08:15:52.438+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.w.a.logout.LogoutFilter            : Did not match request to Or [Ant [pattern='/api/v1/auth/logout', GET], Ant [pattern='/api/v1/auth/logout', POST], Ant [pattern='/api/v1/auth/logout', PUT], Ant [pattern='/api/v1/auth/logout', DELETE]]
+2025-07-25T08:15:52.438+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking JwtExceptionFilter (7/15)
+2025-07-25T08:15:52.438+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking BearerTokenAuthenticationFilter (8/15)
+2025-07-25T08:15:52.439+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.authentication.ProviderManager     : Authenticating request with JwtAuthenticationProvider (1/2)
+2025-07-25T08:15:52.479+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] s.o.s.r.a.JwtGrantedAuthoritiesConverter : Looking for scopes in claim scope
+2025-07-25T08:15:52.479+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-25T08:15:52.479+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-2] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@9eadf6a8, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:15:52.479+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking BasicAuthenticationFilter (9/15)
+2025-07-25T08:15:52.479+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.w.a.www.BasicAuthenticationFilter  : Did not process authentication request since failed to find username and password in Basic Authorization header
+2025-07-25T08:15:52.479+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking RequestCacheAwareFilter (10/15)
+2025-07-25T08:15:52.479+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderAwareRequestFilter (11/15)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking AnonymousAuthenticationFilter (12/15)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking SessionManagementFilter (13/15)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Did not set SecurityContextHolder since already authenticated JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@9eadf6a8, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] s.CompositeSessionAuthenticationStrategy : Preparing session with ChangeSessionIdAuthenticationStrategy (1/1)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking ExceptionTranslationFilter (14/15)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Invoking AuthorizationFilter (15/15)
+2025-07-25T08:15:52.480+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] estMatcherDelegatingAuthorizationManager : Authorizing GET /api/v1/feeds/precomputed?userId=491f402f-a9fd-4f07-abde-acdc5db1645a
+2025-07-25T08:15:52.481+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] estMatcherDelegatingAuthorizationManager : Checking authorization on GET /api/v1/feeds/precomputed?userId=491f402f-a9fd-4f07-abde-acdc5db1645a using org.springframework.security.authorization.AuthenticatedAuthorizationManager@22bbadb2
+2025-07-25T08:15:52.481+07:00 DEBUG 16420 --- [Poops] [http-nio-8181-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /api/v1/feeds/precomputed?userId=491f402f-a9fd-4f07-abde-acdc5db1645a
+2025-07-25T08:15:52.974+07:00  INFO 16420 --- [Poops] [http-nio-8181-exec-2] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+GET /api/v1/feeds/precomputed
+Body: 
+2025-07-25T08:15:52.974+07:00  INFO 16420 --- [Poops] [http-nio-8181-exec-2] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Following feed data","result":{"currentPage":1,"totalPages":1,"pageSize":10,"totalElements":1,"data":[{"postId":6,"userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avtUrl":null,"caption":"Bài viết đầu tiên","fileUrls":["http://localhost:8181/api/v1/files/media/download/09dd37bd-a925-4d00-9d3e-ddd4af083179.png","http://localhost:8181/api/v1/files/media/download/f751e477-7119-47ae-a51c-0b33f6730dd0.png"],"likedUserIds":[],"createdAt":"2025-07-24T23:18:10.544+00:00"}]}}
+2025-07-25T08:15:52.975+07:00 TRACE 16420 --- [Poops] [http-nio-8181-exec-2] o.s.s.w.header.writers.HstsHeaderWriter  : Not injecting HSTS header since it did not match request to [Is Secure]
+2025-07-25T08:27:32.565+07:00 TRACE 22716 --- [Poops] [main] eGlobalAuthenticationAutowiredConfigurer : Eagerly initializing {securityConfig=init.upinmcse.backend.config.security.SecurityConfig$$SpringCGLIB$$0@59294f29}
+2025-07-25T08:27:32.568+07:00 DEBUG 22716 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-25T08:27:32.847+07:00 DEBUG 22716 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-25T08:28:02.742+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Trying to match request against DefaultSecurityFilterChain defined as 'securityFilterChain' in [class path resource [init/upinmcse/backend/config/security/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Cors, Logout, JwtException, BearerTokenAuthentication, BasicAuthentication, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, SessionManagement, ExceptionTranslation, Authorization] (1/1)
+2025-07-25T08:28:02.745+07:00 DEBUG 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/posts
+2025-07-25T08:28:02.746+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking DisableEncodeUrlFilter (1/15)
+2025-07-25T08:28:02.747+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking WebAsyncManagerIntegrationFilter (2/15)
+2025-07-25T08:28:02.751+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderFilter (3/15)
+2025-07-25T08:28:02.754+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking HeaderWriterFilter (4/15)
+2025-07-25T08:28:02.757+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking CorsFilter (5/15)
+2025-07-25T08:28:02.762+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking LogoutFilter (6/15)
+2025-07-25T08:28:02.762+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.logout.LogoutFilter            : Did not match request to Or [Ant [pattern='/api/v1/auth/logout', GET], Ant [pattern='/api/v1/auth/logout', POST], Ant [pattern='/api/v1/auth/logout', PUT], Ant [pattern='/api/v1/auth/logout', DELETE]]
+2025-07-25T08:28:02.763+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking JwtExceptionFilter (7/15)
+2025-07-25T08:28:02.763+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking BearerTokenAuthenticationFilter (8/15)
+2025-07-25T08:28:02.766+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.authentication.ProviderManager     : Authenticating request with JwtAuthenticationProvider (1/2)
+2025-07-25T08:28:03.023+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] s.o.s.r.a.JwtGrantedAuthoritiesConverter : Looking for scopes in claim scope
+2025-07-25T08:28:03.024+07:00 DEBUG 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-25T08:28:03.026+07:00 DEBUG 22716 --- [Poops] [http-nio-8181-exec-1] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:28:03.026+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking BasicAuthenticationFilter (9/15)
+2025-07-25T08:28:03.028+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.www.BasicAuthenticationFilter  : Did not process authentication request since failed to find username and password in Basic Authorization header
+2025-07-25T08:28:03.028+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking RequestCacheAwareFilter (10/15)
+2025-07-25T08:28:03.028+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderAwareRequestFilter (11/15)
+2025-07-25T08:28:03.030+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking AnonymousAuthenticationFilter (12/15)
+2025-07-25T08:28:03.031+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SessionManagementFilter (13/15)
+2025-07-25T08:28:03.032+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Did not set SecurityContextHolder since already authenticated JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:28:03.033+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] s.CompositeSessionAuthenticationStrategy : Preparing session with ChangeSessionIdAuthenticationStrategy (1/1)
+2025-07-25T08:28:03.033+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking ExceptionTranslationFilter (14/15)
+2025-07-25T08:28:03.034+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking AuthorizationFilter (15/15)
+2025-07-25T08:28:03.035+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] estMatcherDelegatingAuthorizationManager : Authorizing POST /api/v1/posts
+2025-07-25T08:28:03.038+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] estMatcherDelegatingAuthorizationManager : Checking authorization on POST /api/v1/posts using org.springframework.security.authorization.AuthenticatedAuthorizationManager@67da85aa
+2025-07-25T08:28:03.040+07:00 DEBUG 22716 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/posts
+2025-07-25T08:28:04.240+07:00  INFO 22716 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/posts
+Body: 
+2025-07-25T08:28:04.243+07:00  INFO 22716 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Post created successfully","result":{"postId":9,"userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avtUrl":null,"caption":"ngôn ngữ Golang","fileUrls":["http://localhost:8181/api/v1/files/media/download/e5ba91be-30b6-4f99-8ba0-c8cd6bb30fea.png"],"likedUserIds":null,"createdAt":null}}
+2025-07-25T08:28:04.244+07:00 TRACE 22716 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.header.writers.HstsHeaderWriter  : Not injecting HSTS header since it did not match request to [Is Secure]
+2025-07-25T08:30:24.012+07:00 TRACE 13440 --- [Poops] [main] eGlobalAuthenticationAutowiredConfigurer : Eagerly initializing {securityConfig=init.upinmcse.backend.config.security.SecurityConfig$$SpringCGLIB$$0@31fd3db2}
+2025-07-25T08:30:24.014+07:00 DEBUG 13440 --- [Poops] [main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-25T08:30:24.279+07:00 DEBUG 13440 --- [Poops] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtExceptionFilter, BearerTokenAuthenticationFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-25T08:30:48.994+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Trying to match request against DefaultSecurityFilterChain defined as 'securityFilterChain' in [class path resource [init/upinmcse/backend/config/security/SecurityConfig.class]] matching [any request] and having filters [DisableEncodeUrl, WebAsyncManagerIntegration, SecurityContextHolder, HeaderWriter, Cors, Logout, JwtException, BearerTokenAuthentication, BasicAuthentication, RequestCacheAware, SecurityContextHolderAwareRequest, AnonymousAuthentication, SessionManagement, ExceptionTranslation, Authorization] (1/1)
+2025-07-25T08:30:48.996+07:00 DEBUG 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /api/v1/posts
+2025-07-25T08:30:48.998+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking DisableEncodeUrlFilter (1/15)
+2025-07-25T08:30:48.999+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking WebAsyncManagerIntegrationFilter (2/15)
+2025-07-25T08:30:49.003+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderFilter (3/15)
+2025-07-25T08:30:49.004+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking HeaderWriterFilter (4/15)
+2025-07-25T08:30:49.007+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking CorsFilter (5/15)
+2025-07-25T08:30:49.010+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking LogoutFilter (6/15)
+2025-07-25T08:30:49.010+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.logout.LogoutFilter            : Did not match request to Or [Ant [pattern='/api/v1/auth/logout', GET], Ant [pattern='/api/v1/auth/logout', POST], Ant [pattern='/api/v1/auth/logout', PUT], Ant [pattern='/api/v1/auth/logout', DELETE]]
+2025-07-25T08:30:49.011+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking JwtExceptionFilter (7/15)
+2025-07-25T08:30:49.011+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking BearerTokenAuthenticationFilter (8/15)
+2025-07-25T08:30:49.013+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.authentication.ProviderManager     : Authenticating request with JwtAuthenticationProvider (1/2)
+2025-07-25T08:30:49.162+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] s.o.s.r.a.JwtGrantedAuthoritiesConverter : Looking for scopes in claim scope
+2025-07-25T08:30:49.162+07:00 DEBUG 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.o.s.r.a.JwtAuthenticationProvider  : Authenticated token
+2025-07-25T08:30:49.163+07:00 DEBUG 13440 --- [Poops] [http-nio-8181-exec-1] .s.r.w.a.BearerTokenAuthenticationFilter : Set SecurityContextHolder to JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:30:49.164+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking BasicAuthenticationFilter (9/15)
+2025-07-25T08:30:49.164+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.www.BasicAuthenticationFilter  : Did not process authentication request since failed to find username and password in Basic Authorization header
+2025-07-25T08:30:49.164+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking RequestCacheAwareFilter (10/15)
+2025-07-25T08:30:49.164+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderAwareRequestFilter (11/15)
+2025-07-25T08:30:49.166+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking AnonymousAuthenticationFilter (12/15)
+2025-07-25T08:30:49.166+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking SessionManagementFilter (13/15)
+2025-07-25T08:30:49.168+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Did not set SecurityContextHolder since already authenticated JwtAuthenticationToken [Principal=org.springframework.security.oauth2.jwt.Jwt@f4e21e27, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ROLE_USER]]
+2025-07-25T08:30:49.168+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] s.CompositeSessionAuthenticationStrategy : Preparing session with ChangeSessionIdAuthenticationStrategy (1/1)
+2025-07-25T08:30:49.168+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking ExceptionTranslationFilter (14/15)
+2025-07-25T08:30:49.168+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Invoking AuthorizationFilter (15/15)
+2025-07-25T08:30:49.169+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] estMatcherDelegatingAuthorizationManager : Authorizing POST /api/v1/posts
+2025-07-25T08:30:49.172+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] estMatcherDelegatingAuthorizationManager : Checking authorization on POST /api/v1/posts using org.springframework.security.authorization.AuthenticatedAuthorizationManager@29c28ea1
+2025-07-25T08:30:49.173+07:00 DEBUG 13440 --- [Poops] [http-nio-8181-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /api/v1/posts
+2025-07-25T08:30:50.016+07:00  INFO 13440 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === REQUEST ===
+POST /api/v1/posts
+Body: 
+2025-07-25T08:30:50.020+07:00  INFO 13440 --- [Poops] [http-nio-8181-exec-1] i.u.backend.config.init.LoggingFilter    : === RESPONSE ===
+Status: 200
+Body: {"code":1000,"message":"Post created successfully","result":{"postId":10,"userId":"b518f5f0-dde5-40a3-bd4f-9d53e165a281","fullName":"Upin","avtUrl":null,"caption":"ngôn ngữ Golang 2","fileUrls":["http://localhost:8181/api/v1/files/media/download/ce6281fa-0f1f-4112-8002-1501a2780a52.png"],"likedUserIds":null,"createdAt":null}}
+2025-07-25T08:30:50.022+07:00 TRACE 13440 --- [Poops] [http-nio-8181-exec-1] o.s.s.w.header.writers.HstsHeaderWriter  : Not injecting HSTS header since it did not match request to [Is Secure]

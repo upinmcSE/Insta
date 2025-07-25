@@ -1,6 +1,8 @@
 package init.upinmcse.backend.service.impl;
 
+import init.upinmcse.backend.config.init.MessageQueueConfig;
 import init.upinmcse.backend.dto.common.PageResponse;
+import init.upinmcse.backend.dto.event.PostCreatedEvent;
 import init.upinmcse.backend.dto.request.PostRequest;
 import init.upinmcse.backend.dto.response.FileResponse;
 import init.upinmcse.backend.dto.response.PostResponse;
@@ -14,7 +16,7 @@ import init.upinmcse.backend.model.PostLike;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.db.FileRepository;
 import init.upinmcse.backend.repository.db.PostLikeRepository;
-import init.upinmcse.backend.repository.db.PostRepostitory;
+import init.upinmcse.backend.repository.db.PostRepository;
 import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.IFileService;
 import init.upinmcse.backend.service.IPostService;
@@ -39,7 +41,7 @@ import java.util.List;
 @Slf4j(topic = "PostService")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostService implements IPostService {
-    PostRepostitory postRepostitory;
+    PostRepository postRepository;
     FileRepository fileRepository;
     IFileService fileService;
     UserRepository userRepository;
@@ -58,7 +60,7 @@ public class PostService implements IPostService {
                 .caption(postRequest.getCaption())
                 .status(Status.INACTIVE)
                 .build();
-        post = postRepostitory.save(post);
+        post = postRepository.save(post);
 
         List<FileResponse> fileResponses = new ArrayList<>();
 
@@ -74,7 +76,26 @@ public class PostService implements IPostService {
             }
         }
         post.setStatus(Status.ACTIVE);
-        post = postRepostitory.saveAndFlush(post);
+        post = postRepository.saveAndFlush(post);
+
+        // Publish post creation event
+        PostCreatedEvent event = PostCreatedEvent.builder()
+                .postId(post.getId())
+                .userId(user.getId())
+                .fullName(user.getFullName())
+                .avtUrl(user.getAvtUrl())
+                .caption(post.getCaption())
+                .createdAt(post.getCreatedAt())
+                .likedUserIds(postLikeRepository.findAllByPostId(post.getId()).stream()
+                        .map(postLike -> postLike.getUser().getId()).toList())
+                .fileUrls(fileResponses.stream().map(FileResponse::getUrl).toList())
+                .build();
+
+        rabbitTemplate.convertAndSend(
+                MessageQueueConfig.EXCHANGE,
+                MessageQueueConfig.ROUTING_KEY,
+                event
+        );
 
         return PostResponse.builder()
                 .postId(post.getId())
@@ -88,7 +109,7 @@ public class PostService implements IPostService {
 
     @Override
     public PostResponse getPostById(Long postId) {
-        Post post = postRepostitory.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
         User user = userRepository.findById(post.getUser().getId()).orElseThrow(
@@ -120,7 +141,7 @@ public class PostService implements IPostService {
         Sort sort = Sort.by("createdAt").descending();
 
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = postRepostitory.findAllByUserIdAndStatus(user.getId(), Status.ACTIVE, pageable);
+        var pageData = postRepository.findAllByUserIdAndStatus(user.getId(), Status.ACTIVE, pageable);
 
         var postList = pageData.getContent().stream().map(
             post -> PostResponse.builder()
@@ -154,11 +175,11 @@ public class PostService implements IPostService {
 
     @Override
     public void deletePost(Long postId) {
-        Post post = postRepostitory.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
         post.setStatus(Status.INACTIVE);
-        postRepostitory.saveAndFlush(post);
+        postRepository.saveAndFlush(post);
     }
 
     @Override
@@ -169,7 +190,7 @@ public class PostService implements IPostService {
     @Transactional
     @Override
     public void likePost(Long postId) {
-        Post post = postRepostitory.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -192,7 +213,7 @@ public class PostService implements IPostService {
     @Transactional
     @Override
     public void unlikePost(Long postId) {
-        Post post = postRepostitory.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -3,7 +3,7 @@ package init.upinmcse.backend.controller;
 import init.upinmcse.backend.dto.common.BaseResponse;
 import init.upinmcse.backend.dto.common.PageResponse;
 import init.upinmcse.backend.dto.response.PostResponse;
-import init.upinmcse.backend.service.IFeedService;
+import init.upinmcse.backend.service.INewFeedService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/feeds")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class FeedController {
-    IFeedService feedService;
+public class NewFeedController {
+    INewFeedService feedService;
 
     @GetMapping("/dynamic")
     public BaseResponse<PageResponse<PostResponse>> getGlobalFeed(
@@ -26,7 +26,7 @@ public class FeedController {
     ) {
         return BaseResponse.<PageResponse<PostResponse>>builder()
                 .message("Global feed data")
-                .result(feedService.getGlobalFeed(page, size))
+                .result(feedService.getDynamicPost(page, size))
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class FeedController {
     ) {
         return BaseResponse.<PageResponse<PostResponse>>builder()
                 .message("Following feed data")
-                .result(new PageResponse<>())
+                .result(feedService.getPrecomputedPost(page, size, userId))
                 .build();
     }
 }

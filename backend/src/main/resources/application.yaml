@@ -7,10 +7,10 @@ server:
       enabled: false
 
 logging:
-  file:
-    name: ./log/application.log
+#  file:
+#    name: ./log/application.log
   level:
-    root: ERROR
+#    root: ERROR
     init:
       upinmcse:
         backend:
@@ -46,15 +46,11 @@ spring:
       host: localhost
       port: 6379
 
-#  rabbitmq:
-#    host: rabbitmq
-#    port: 5672
-#    stomp:
-#      relay:
-#        host: rabbitmq
-#        port: 61613
-#        login: guest
-#        passcode: guest
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
   mail:
     from: ${MAIL}

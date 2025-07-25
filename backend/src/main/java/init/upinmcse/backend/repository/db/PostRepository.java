@@ -9,11 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepostitory extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findById(Long postId);
 
     boolean existsById(Long postId);
@@ -24,12 +23,18 @@ public interface PostRepostitory extends JpaRepository<Post, Long> {
     // lấy tất cả bài viết của theo userId và trạng thái cụ thể
     Page<Post> findAllByUserIdAndStatus(String userId, Status status, Pageable pageable);
 
-
     // lây tất cả bài viết của những nguoi mà userId theo dõi
-    @Query("SELECT p.id FROM Post p " +
-            "JOIN UserFollowing f ON p.user.id = f.followingUserId " +
-            "WHERE f.followerUserId = :followerUserId " +
-            "AND p.status = init.upinmcse.backend.constant.Status.ACTIVE")
-    List<Long> findPostIdsByFollowerUserId(@Param("followerUserId") String followerUserId);
+//    @Query("SELECT p FROM Post p WHERE p.user.id IN " +
+//            "(SELECT f.followingUserId FROM UserFollowing f WHERE f.followerUserId = :userId) " +
+//            "AND p.status = :status")
+//    Page<Post> findAllByFollowingUserIdAndStatus(@Param("userId") String userId,
+//                                                 @Param("status") Status status,
+//                                                 Pageable pageable);
 
+    // dùng JOIN
+    @Query("SELECT p FROM Post p JOIN UserFollowing f ON p.user.id = f.followingUserId " +
+            "WHERE f.followerUserId = :userId AND p.status = :status")
+    Page<Post> findAllByFollowingUserIdAndStatus(@Param("userId") String userId,
+                                                 @Param("status") Status status,
+                                                 Pageable pageable);
 }

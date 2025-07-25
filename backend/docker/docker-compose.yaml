@@ -36,7 +36,14 @@ services:
 #      - ./minio_data:/data
     command: server /data --console-address ":9001"
 
-
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: insta-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI
+      - "61613:61613" # STOMP protocol
 
 volumes:
     mysql_data:

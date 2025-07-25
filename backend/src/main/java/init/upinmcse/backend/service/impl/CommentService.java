@@ -11,7 +11,7 @@ import init.upinmcse.backend.model.Post;
 import init.upinmcse.backend.model.RepComment;
 import init.upinmcse.backend.model.User;
 import init.upinmcse.backend.repository.db.CommentRepository;
-import init.upinmcse.backend.repository.db.PostRepostitory;
+import init.upinmcse.backend.repository.db.PostRepository;
 import init.upinmcse.backend.repository.db.RepCommentRepository;
 import init.upinmcse.backend.repository.db.UserRepository;
 import init.upinmcse.backend.service.ICommentService;
@@ -27,12 +27,12 @@ import org.springframework.stereotype.Service;
 public class CommentService implements ICommentService {
     CommentRepository commentRepository;
     RepCommentRepository repCommentRepository;
-    PostRepostitory postRepostitory;
+    PostRepository postRepository;
     UserRepository userRepository;
 
     @Override
     public CommentResponse createComment(CommentRequest request) {
-        Post post = postRepostitory.findById(request.getPostId())
+        Post post = postRepository.findById(request.getPostId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
