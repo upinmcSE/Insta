@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
-import { redirect } from "react-router";
 import { isAuthenticated, login } from '@/services/auth';
 import { setToken, setUser } from '@/services/storage';
 import { OAuthConfig } from '@/config/configuration';
@@ -19,11 +18,10 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Email:', email, 'Password:', password);
      try {
       const response = await login(email, password);
       setToken(response.result.accessToken)
-      setUser(response.result.userLoginInfo)
+      setUser(response.result.userInfo)
       navigate("/");
     } catch (error) {
       console.log(error)

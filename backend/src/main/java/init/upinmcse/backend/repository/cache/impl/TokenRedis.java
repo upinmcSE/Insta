@@ -37,4 +37,9 @@ public class TokenRedis implements RedisClient {
         String redisKey = "refresh_token:" + key;
         redisTemplate.delete(redisKey);
     }
+
+    @Override
+    public boolean exists(String key) {
+        return false;
+    }
 }

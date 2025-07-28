@@ -111,7 +111,7 @@ const Home: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <img
-                  src={user?.avatarUrl || '/assets/unknow.png'}
+                  src={user?.avatarUrl || '/assets/unknown.png'}
                   alt="User"
                   className="w-10 h-10 rounded-full"
                 />

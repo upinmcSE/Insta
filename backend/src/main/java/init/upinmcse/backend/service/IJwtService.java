@@ -12,6 +12,8 @@ public interface IJwtService {
 
     String extractJwtId(String token, TokenType typeToken) throws ParseException;
 
+    String extractUserId(String token) throws ParseException;
+
     SignedJWT validateToken(String token, boolean isRefresh) throws JOSEException, ParseException;
 
     Date extractExpiration(String token, TokenType typeToken) throws ParseException;

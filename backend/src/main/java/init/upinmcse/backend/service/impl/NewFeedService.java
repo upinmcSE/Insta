@@ -75,7 +75,6 @@ public class NewFeedService implements INewFeedService {
     @Override
     public PageResponse<PostResponse> getPrecomputedPost(int page, int size, String userId) {
         try {
-
             String redisKey = "new_feed:" + userId;
 
             // Tính toán start và end cho phân trang
@@ -103,6 +102,8 @@ public class NewFeedService implements INewFeedService {
                     if (totalElements == null) {
                         totalElements = 0L;
                     }
+
+                    log.info("data form Redis");
 
                     return PageResponse.<PostResponse>builder()
                             .currentPage(page)

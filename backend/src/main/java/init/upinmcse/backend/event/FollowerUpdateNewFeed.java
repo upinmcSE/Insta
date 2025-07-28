@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import init.upinmcse.backend.config.init.MessageQueueConfig;
 import init.upinmcse.backend.dto.event.PostCreatedEvent;
+import init.upinmcse.backend.repository.cache.impl.NewFeedRedis;
 import init.upinmcse.backend.repository.db.FollowerRepository;
 import init.upinmcse.backend.repository.db.PostRepository;
 import lombok.AccessLevel;
@@ -32,13 +33,10 @@ public class FollowerUpdateNewFeed {
         // lấy tất cả userID của những người theo dõi userId
         List<String> followerUserIds = followerRepository.findFollowerUserIdsByFollowingUserId(event.getUserId());
 
-        log.info("xxx: ",followerUserIds.size());
-
         if (followerUserIds.isEmpty()) {
             return;
         }
 
-        // thêm post mới vào cache của những người theo dõi userId
         for (String followerUserId : followerUserIds) {
             String key = "new_feed:" + followerUserId;
             try {

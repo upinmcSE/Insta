@@ -1,6 +1,7 @@
 package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.constant.PredefinedRole;
+import init.upinmcse.backend.dto.common.UserInfo;
 import init.upinmcse.backend.dto.request.*;
 import init.upinmcse.backend.dto.response.JwtResponse;
 import init.upinmcse.backend.dto.response.RegisterResponse;
@@ -122,14 +123,14 @@ public class AuthService implements IAuthService {
                 )
         );
 
-        var accessToken = jwtService.generateToken(existingUser.getEmail(), TokenType.ACCESS_TOKEN);
-        var refreshToken = jwtService.generateToken(existingUser.getEmail(), TokenType.REFRESH_TOKEN);
+        var accessToken = jwtService.generateToken(existingUser.getId(), TokenType.ACCESS_TOKEN);
+        var refreshToken = jwtService.generateToken(existingUser.getId(), TokenType.REFRESH_TOKEN);
 
         storeRefreshToken(existingUser.getId(), refreshToken);
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
-                .userLoginInfo(UserLoginInfo.builder()
+                .userInfo(UserInfo.builder()
                         .id(existingUser.getId())
                         .fullName(existingUser.getFullName())
                         .avatarUrl(existingUser.getAvtUrl())
@@ -173,12 +174,12 @@ public class AuthService implements IAuthService {
             throw new ErrorException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var accessToken = jwtService.generateToken(user.getEmail(), TokenType.ACCESS_TOKEN);
-        var refreshToken = jwtService.generateToken(user.getEmail(), TokenType.REFRESH_TOKEN);
+        var accessToken = jwtService.generateToken(user.getId(), TokenType.ACCESS_TOKEN);
+        var refreshToken = jwtService.generateToken(user.getId(), TokenType.REFRESH_TOKEN);
 
         storeRefreshToken(user.getId(), refreshToken);
 
-        var userInfo = UserLoginInfo.builder()
+        var userInfo = UserInfo.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .avatarUrl(user.getAvtUrl())
@@ -186,7 +187,7 @@ public class AuthService implements IAuthService {
 
         return JwtResponse.builder()
                 .accessToken(accessToken)
-                .userLoginInfo(userInfo)
+                .userInfo(userInfo)
                 .build();
     }
 
@@ -210,7 +211,7 @@ public class AuthService implements IAuthService {
 
         storeRefreshToken(user.getId(), refreshToken);
 
-        var userInfo = UserLoginInfo.builder()
+        var userInfo = UserInfo.builder()
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .avatarUrl(user.getAvtUrl())
@@ -218,7 +219,7 @@ public class AuthService implements IAuthService {
 
         return JwtResponse.builder()
                 .accessToken(token)
-                .userLoginInfo(userInfo)
+                .userInfo(userInfo)
                 .build();
     }
 
@@ -235,6 +236,7 @@ public class AuthService implements IAuthService {
 
         String code = generateCode();
         String hashedToken = passwordEncoder.encode(code);
+
         userRepository.save(user);
         try {
             mailService.sendEmail(

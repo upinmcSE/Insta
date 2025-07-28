@@ -84,7 +84,7 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
       <div className="flex items-center p-3 mb-4">
         <Link to={`/profile/${post.fullName}`} className="flex items-center">
           <img
-            src={post.avatarUrl || '/assets/unknow.png'}
+            src={post.avatarUrl || '/assets/unknown.png'}
             alt={post.fullName}
             className="w-8 h-8 rounded-full object-cover mr-3"
           />

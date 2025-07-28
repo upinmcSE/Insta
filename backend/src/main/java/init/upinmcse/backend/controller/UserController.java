@@ -2,7 +2,9 @@ package init.upinmcse.backend.controller;
 
 import init.upinmcse.backend.dto.common.BaseResponse;
 import init.upinmcse.backend.dto.common.PageResponse;
+import init.upinmcse.backend.dto.common.UserInfo;
 import init.upinmcse.backend.dto.request.ChangePasswordRequest;
+import init.upinmcse.backend.dto.request.SearchUserRequest;
 import init.upinmcse.backend.dto.request.UpdateInfo;
 import init.upinmcse.backend.dto.response.UserResponse;
 import init.upinmcse.backend.service.IUserService;
@@ -60,14 +62,6 @@ public class UserController {
                 .build();
     }
 
-    @PatchMapping("/change-profile-image")
-    public BaseResponse<String> changeProfileImage() {
-        return BaseResponse.<String>builder()
-                .message("Change profile image successfully")
-                .result("Updated user profile image")
-                .build();
-    }
-
     @PostMapping("/follow/{userId}")
     public BaseResponse<Void> followUser(@PathVariable String userId) {
         userService.followUser(userId);
@@ -81,18 +75,6 @@ public class UserController {
         userService.unfollowUser(userId);
         return BaseResponse.<Void>builder()
                 .message("Unfollow user successfully")
-                .build();
-    }
-
-    @GetMapping("/search")
-    public BaseResponse<PageResponse<UserResponse>> searchUser(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam String query
-    ) {
-        return BaseResponse.<PageResponse<UserResponse>>builder()
-                .message("Search user successfully")
-                .result(userService.searchUser(query, page, size))
                 .build();
     }
 
@@ -111,6 +93,14 @@ public class UserController {
         return BaseResponse.<List<UserResponse>>builder()
                 .message("Get followers successfully")
                 .result(followers)
+                .build();
+    }
+
+    @PostMapping("/search")
+    public BaseResponse<List<UserInfo>> search(@RequestBody SearchUserRequest request){
+        return BaseResponse.<List<UserInfo>>builder()
+                .message("Search users successfully")
+                .result(userService.search(request))
                 .build();
     }
 }

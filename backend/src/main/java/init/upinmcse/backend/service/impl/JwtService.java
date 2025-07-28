@@ -48,17 +48,17 @@ public class JwtService implements IJwtService {
     long REFRESH_EXPIRY_SECONDS;
 
     @Override
-    public String generateToken(String email, TokenType typeToken) {
+    public String generateToken(String userId, TokenType typeToken) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         long expiryTimeInSeconds = typeToken == TokenType.ACCESS_TOKEN ? ACCESS_EXPIRY_SECONDS : REFRESH_EXPIRY_SECONDS;
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(email)
+                .subject(userId)
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(expiryTimeInSeconds, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"))))
+                .claim("scope", buildScope(userRepository.findById(userId).orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER))))
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());
@@ -105,6 +105,17 @@ public class JwtService implements IJwtService {
         if (signedJWT.getJWTClaimsSet() != null && signedJWT.getJWTClaimsSet().getJWTID() != null) {
             return signedJWT.getJWTClaimsSet().getJWTID();
         }
+        return null;
+    }
+
+    @Override
+    public String extractUserId(String token) throws ParseException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        if (signedJWT.getJWTClaimsSet() != null && signedJWT.getJWTClaimsSet().getSubject() != null) {
+            return signedJWT.getJWTClaimsSet().getSubject();
+        }
+
         return null;
     }
 
