@@ -35,8 +35,8 @@ public class CommentService implements ICommentService {
         Post post = postRepository.findById(request.getPostId())
                 .orElseThrow(() -> new ErrorException(ErrorCode.POST_NOT_FOUND));
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         Comment comment = Comment.builder()
@@ -77,8 +77,8 @@ public class CommentService implements ICommentService {
                 .orElseThrow(() -> new ErrorException(ErrorCode.COMMENT_NOT_FOUND));
 
         // check user exists
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         // create reply comment

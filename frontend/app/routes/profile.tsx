@@ -8,16 +8,16 @@ const Profile: React.FC = () => {
     const [user, setUser] = useState<UserProfile | null>({
         id: "user123",
         email: "duongtrungthanh@example.com",
-        avtUrl: "/assets/unknow.png",
-        fullName: "Duong Trung Thanh",
+        avtUrl: "/assets/unknown.png",
+        fullName: "Upin",
         bio: "Just a coder with a love for cats and tech. Hopefully...",
         followers: [],
-        following: [],
+        following: ["1231323"],
     });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [followLoading, setFollowLoading] = useState(false);
-    const isCurrentUserProfile = false;
+    const isCurrentUserProfile = true;
 
     const navigate = useNavigate();
 
@@ -30,12 +30,10 @@ const Profile: React.FC = () => {
 
     // Mock posts data
     const posts = [
-        { id: 1, image: "https://via.placeholder.com/300" },
-        { id: 2, image: "https://via.placeholder.com/300" },
-        { id: 3, image: "https://via.placeholder.com/300" },
-        { id: 4, image: "https://via.placeholder.com/300" },
-        { id: 5, image: "https://via.placeholder.com/300" },
-        { id: 6, image: "https://via.placeholder.com/300" },
+        { id: 1, image: "https://i.pinimg.com/736x/72/80/55/728055c1ab422e4af017ff52864c8143.jpg" },
+        { id: 2, image: "https://i.pinimg.com/736x/0c/94/f1/0c94f15fc457d9bdbc76240c13dd9edc.jpg" },
+        { id: 3, image: "https://i.pinimg.com/736x/c3/ca/7e/c3ca7e33f5bb79b5d7837c0a8a19ea52.jpg" },
+        { id: 4, image: "https://i.pinimg.com/736x/ab/d2/8b/abd28b579d36c1e5c171efcd80f6832c.jpg" },
     ];
 
     return (
@@ -60,7 +58,6 @@ const Profile: React.FC = () => {
                     <div className="flex flex-col items-center md:items-start">
                         <div className="flex items-center mb-4">
                             <h1 className="text-xl md:text-2xl font-light mr-4">{user?.fullName}</h1>
-                            
                             {isCurrentUserProfile ? (
                                 <button 
                                     className="bg-instagram-lightGray text-black font-semibold px-4 py-1.5 rounded text-sm flex items-center"

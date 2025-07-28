@@ -4,12 +4,18 @@ import init.upinmcse.backend.dto.common.UserInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Builder
+import java.util.Date;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JwtResponse {
-    String accessToken;
-    UserInfo userInfo;
+public class ConversationResponse {
+    String id;
+    String ownerId;
+    String ownerName;
+    String ownerAvtUrl;
+    UserInfo participant;
+    Date createdAt;
 }

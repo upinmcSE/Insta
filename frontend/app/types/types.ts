@@ -46,6 +46,23 @@ export interface Comment {
     createdAt: number; // Changed to number timestamp
 }
 
+export interface Message {
+    id: string;
+    conversationId: string;
+    sender: boolean;
+    message: string;
+    senderInfo: User
+    createdAt: Date
+}
+
+export interface Conversation {
+    id: string;
+    ownerId: string;
+    ownerName: string;
+    participant: User;
+    createAt: Date;
+}
+
 export interface PostWithDetails {
     id: string;
     user_id: string;

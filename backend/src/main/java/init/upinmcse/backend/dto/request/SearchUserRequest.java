@@ -1,16 +1,12 @@
 package init.upinmcse.backend.dto.request;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserLoginInfo {
-    String id;
-    String fullName;
-    String avatarUrl;
-
+public class SearchUserRequest {
+    String keywork;
 }

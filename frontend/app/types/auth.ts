@@ -5,7 +5,7 @@ export type LoginResponse = ApiResponse<
     {
         accessToken:string, 
         refreshToken: string,
-        userLoginInfo: User
+        userInfo: User
     }
 >
 

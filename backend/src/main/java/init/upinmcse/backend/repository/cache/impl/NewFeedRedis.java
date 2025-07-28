@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.concurrent.TimeUnit;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,7 +28,11 @@ public class NewFeedRedis implements RedisClient {
     }
 
     @Override
-    public void delete(String key) {
+    public void delete(String key) {}
 
+    @Override
+    public boolean exists(String key) {
+        String redisKey = "new_feed:" + key;
+        return Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
     }
 }

@@ -8,4 +8,5 @@ export default [
     route("profile", "routes/profile.tsx"),
     route("user", "routes/user.tsx"),
     route("search", "routes/search.tsx"),
+    route("messages", "routes/chat.tsx"),
 ] satisfies RouteConfig;

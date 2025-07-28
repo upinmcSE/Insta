@@ -1,7 +1,9 @@
 package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.dto.common.PageResponse;
+import init.upinmcse.backend.dto.common.UserInfo;
 import init.upinmcse.backend.dto.request.ChangePasswordRequest;
+import init.upinmcse.backend.dto.request.SearchUserRequest;
 import init.upinmcse.backend.dto.request.UpdateInfo;
 import init.upinmcse.backend.dto.response.UserResponse;
 import init.upinmcse.backend.constant.FileType;
@@ -37,8 +39,8 @@ public class UserService implements IUserService {
 
     @Override
     public UserResponse getMe() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         return UserResponse.builder()
@@ -71,8 +73,8 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public UserResponse updateInfo(UpdateInfo request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 //        user.setFullName(request.getFullName());
 //        user.setBio(request.getBio());
@@ -101,6 +103,21 @@ public class UserService implements IUserService {
     }
 
 
+    @Override
+    public List<UserInfo> search(SearchUserRequest request) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<User> users = userRepository.findAllByFullNameContainingIgnoreCase(request.getKeywork());
+
+        return users.stream()
+                .filter(user -> !user.getId().equals(userId)) // Loại bỏ người dùng hiện tại
+                .map(user -> UserInfo.builder()
+                        .id(user.getId())
+                        .fullName(user.getFullName())
+                        .avatarUrl(getUserImage(user.getId()))
+                        .build())
+                .toList();
+    }
+
     @Transactional
     @Override
     public void changePassword(ChangePasswordRequest request) {
@@ -108,8 +125,8 @@ public class UserService implements IUserService {
             throw new ErrorException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
@@ -123,14 +140,9 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void followUser(String userId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String myUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(myUserId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-
-        // kiểm tra người dùng có tồn tại không
-        if( !userRepository.existsById(userId)) {
-            throw new ErrorException(ErrorCode.NOT_FOUND_USER);
-        }
 
         // Kiểm tra xem người dùng đã theo dõi người dùng khác chưa
         if (followerRepository.existsByFollowerUserIdAndFollowingUserId(user.getId(), userId)) {
@@ -146,14 +158,9 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void unfollowUser(String userId) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        String myUserId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findById(myUserId)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOUND_USER));
-
-        // kiểm tra người dùng có tồn tại không
-        if( !userRepository.existsById(userId)) {
-            throw new ErrorException(ErrorCode.NOT_FOUND_USER);
-        }
 
         // Kiểm tra xem người dùng có đang theo dõi người dùng khác không
         if (!followerRepository.existsByFollowerUserIdAndFollowingUserId(user.getId(), userId)) {
@@ -165,12 +172,6 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_FOLLOWING));
         followerRepository.delete(following);
 
-    }
-
-    @Override
-    public PageResponse<UserResponse> searchUser(String query, int page, int size) {
-
-        return null;
     }
 
     @Override
@@ -217,7 +218,6 @@ public class UserService implements IUserService {
     }
 
     private String getUserImage(String userId){
-
         return Optional.ofNullable(
                 fileRepository.findByFileTypeAndUserId(FileType.USER_AVATAR, userId)
         ).map(File::getPath).orElse(null); // hoặc orElse("default-avatar.png")

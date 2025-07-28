@@ -30,7 +30,7 @@ const Authenticate: React.FC = () => {
           console.log(data);
 
           setToken(data.result?.accessToken || null);
-          setUser(data.result?.userLoginInfo || null)
+          setUser(data.result?.userInfo || null)
           setIsLoggedin(true);
         });
     }
