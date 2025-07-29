@@ -72,16 +72,16 @@ const Chat: React.FC = () => {
         console.log("Socket disconnected");
       });
 
-      socketRef.current.on("message", (message: Message) => {
-        console.log("Received new message:", message);
-        console.log("conversationID:", selectedConversationRef.current);
-        handleIncomingMessage(message);
+      socketRef.current.on("message", (message) => {
+        const messageObject = JSON.parse(message);
+        if(messageObject?.conversationId){
+          handleIncomingMessage(messageObject);
+        }
       });
     }
 
     return () => {
       if (socketRef.current) {
-        console.log("Disconnecting socket", socketRef.current.id);
         socketRef.current.disconnect();
         socketRef.current = null;
       }
@@ -90,22 +90,15 @@ const Chat: React.FC = () => {
 
   // Handle incoming WebSocket messages
   const handleIncomingMessage = useCallback((message: Message) => {
-
-    console.log("message:",message)
-    console.log("message map:", messagesMap)
-
     setMessagesMap((prev) => {
       const existingMessages = prev[message.conversationId] || [];
       if (existingMessages.some((msg) => msg.id === message.id)) {
-        console.log("Message already exists, not adding:", message.id);
         return prev;
       }
 
       const updatedMessages = [...existingMessages, message].sort(
         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-
-      console.log("Updated messagesMap for", message.conversationId, updatedMessages);
       
       return {
         ...prev,
@@ -125,8 +118,6 @@ const Chat: React.FC = () => {
           : conv
       )
     );
-
-    console.log("currentMessages after update:", selectedConversationRef.current ? messagesMap[selectedConversationRef.current] || [] : []);
   }, [messagesMap]);
 
   // Fetch conversations
@@ -138,7 +129,6 @@ const Chat: React.FC = () => {
 
       try {
         const response: ListConversationResponse = await getConversations(user.id);
-        console.log("Conversations:", response.result);
         setConversations(response.result || []);
       } catch (err) {
         console.error("Error fetching conversations:", err);
@@ -153,7 +143,6 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (conversations.length > 0 && !selectedConversationRef.current) {
       selectedConversationRef.current = conversations[0].id;
-      console.log("Initialized selectedConversationRef:", conversations[0].id);
     }
   }, [conversations]);
 
@@ -166,13 +155,11 @@ const Chat: React.FC = () => {
           const sortedMessages = response.result.sort(
             (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           );
-          console.log("Messages from API:", sortedMessages);
           setMessagesMap((prev) => ({
             ...prev,
             [conversationId]: sortedMessages,
           }));
         } catch (err) {
-          console.error("Error fetching messages:", err);
           setMessagesMap((prev) => ({
             ...prev,
             [conversationId]: [],
@@ -203,7 +190,6 @@ const Chat: React.FC = () => {
     if (query.trim()) {
       try {
         const response: SearchUserResponse = await search(query);
-        console.log("Search results:", response.result);
         setSearchResults(response.result || []);
         setIsDropdownOpen(true);
       } catch (err) {
@@ -224,12 +210,10 @@ const Chat: React.FC = () => {
     );
 
     if (existingConversation) {
-      console.log("Selecting existing conversation:", existingConversation.id);
       selectedConversationRef.current = existingConversation.id;
     } else {
       try {
         const newConversation = await createConversation(user.id, selectedUser.id);
-        console.log("Created new conversation:", newConversation.result.id);
         setConversations([...conversations, newConversation.result]);
         selectedConversationRef.current = newConversation.result.id;
       } catch (err) {
@@ -240,19 +224,16 @@ const Chat: React.FC = () => {
     setSearchQuery("");
     setSearchResults([]);
     setIsDropdownOpen(false);
-    console.log("selectedConversationRef set to:", selectedConversationRef.current);
   };
 
   const handleSendMessage = async () => {
     if (inputMessage.trim() && selectedConversationRef.current && user) {
       try {
         const newMessage = await createMessage(selectedConversationRef.current, inputMessage);
-        console.log("Message sent:", newMessage.result);
         setMessagesMap((prev) => {
           if (!selectedConversationRef.current) return prev;
           const existingMessages = prev[selectedConversationRef.current] || [];
           if (existingMessages.some((msg) => msg.id === newMessage.result.id)) {
-            console.log("Message already exists, not adding:", newMessage.result.id);
             return prev;
           }
           const updatedMessages = [...existingMessages, newMessage.result].sort(
@@ -283,14 +264,12 @@ const Chat: React.FC = () => {
   };
 
   const handleConversationClick = (id: string) => {
-    console.log("Selected conversation:", id);
     selectedConversationRef.current = id;
     setConversations((prevConversations) =>
       prevConversations.map((conv) =>
         conv.id === id ? { ...conv, unread: 0 } : conv
       )
     );
-    console.log("selectedConversationRef set to:", id);
   };
 
   return (
@@ -377,8 +356,8 @@ const Chat: React.FC = () => {
             : "Tin nhắn"}
         </h2>
 
-        <div
-          className="flex-1 overflow-y-auto mb-4 space-y-4"
+       <div
+          className="flex-1 overflow-y-auto mb-4 space-y-4 max-h-[calc(100vh-130px)]"
           ref={messagesEndRef}
           style={{ scrollBehavior: "smooth" }}
         >

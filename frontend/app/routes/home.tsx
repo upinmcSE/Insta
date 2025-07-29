@@ -121,7 +121,7 @@ const Home: React.FC = () => {
               </div>
               <NavLink 
                 className="text-blue-500"
-                to="/profile"
+                to={`/profile/${user?.id}`}
               >
                 Chuyển
               </NavLink>

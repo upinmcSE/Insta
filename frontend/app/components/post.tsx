@@ -19,21 +19,14 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
   const [showAllComments, setShowAllComments] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // Track current image
 
-  const timeSince = (timestamp: number | string) => {
-    const date = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp);
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-    
-    let interval = seconds / 31536000;
-    if (interval > 1) return Math.floor(interval) + ' years ago';
-    interval = seconds / 2592000;
-    if (interval > 1) return Math.floor(interval) + ' months ago';
-    interval = seconds / 86400;
-    if (interval > 1) return Math.floor(interval) + ' days ago';
-    interval = seconds / 3600;
-    if (interval > 1) return Math.floor(interval) + ' hours ago';
-    interval = seconds / 60;
-    if (interval > 1) return Math.floor(interval) + ' minutes ago';
-    return Math.floor(seconds) + ' seconds ago';
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        // hour: '2-digit',
+        // minute: '2-digit'
+    });
   };
 
   const handleLike = async () => {
@@ -82,7 +75,7 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
     <div className="instagram-card">
       {/* Post Header */}
       <div className="flex items-center p-3 mb-4">
-        <Link to={`/profile/${post.fullName}`} className="flex items-center">
+        <Link to={`/profile/${post.userId}`} className="flex items-center">
           <img
             src={post.avatarUrl || '/assets/unknown.png'}
             alt={post.fullName}
@@ -90,7 +83,7 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
           />
           <span className="font-semibold">{post.fullName}</span>
         </Link>
-        <button className="ml-auto text-gray-500">
+        <button className="ml-auto text-gray-500 cursor-pointer">
           <MoreHorizontal size={20} />
         </button>
       </div>
@@ -160,7 +153,7 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
 
         {/* Caption */}
         <div className="mb-2">
-          <Link to={`/profile/${post.fullName}`} className="font-semibold mr-2">
+          <Link to={`/profile/${post.userId}`} className="font-semibold mr-2">
             {post.fullName}
           </Link>
           <span>{post.caption}</span>
@@ -181,7 +174,7 @@ const Post: React.FC<PostProps> = ({ user, post, onComment }) => {
         )} */}
 
         {/* Post Date */}
-        <div className="text-xs text-instagram-darkGray mt-1">{timeSince(post.created_at)}</div>
+        <div className="text-xs text-instagram-darkGray mt-1">{formatDate(post.createdAt)}</div>
       </div>
 
       {/* Comment Form */}

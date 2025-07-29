@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router';
 import 'material-icons/iconfont/material-icons.css';
 import { LogOut } from 'lucide-react'
 import { logout } from '@/services/auth';
+import { getUser } from '@/services/storage';
 
 interface NavbarProps {
   onCreateClick: () => void;
@@ -11,6 +12,8 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
 
   const navigate = useNavigate();
+  const currentUserRaw = getUser();
+  const currentUser = currentUserRaw ? JSON.parse(currentUserRaw) : null;
 
   const handleLogout = async () => {
     try {
@@ -57,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
             <span className="material-icons">add_circle_outline</span>
             <span className="text-lg">Tạo</span>
           </button>
-          <NavLink to="/profile" className="flex items-center space-x-4 text-gray-600 hover:text-black">
+          <NavLink to={`/profile/${currentUser?.id || ""}`} className="flex items-center space-x-4 text-gray-600 hover:text-black">
             <span className="material-icons">person</span>
             <span className="text-lg">Trang cá nhân</span>
           </NavLink>

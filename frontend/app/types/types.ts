@@ -22,7 +22,7 @@ export interface Post {
     fileUrls: string[];
     caption: string;
     likedUserIds: string[];
-    created_at: number; // Changed to number timestamp
+    createdAt: string; // Changed to number timestamp
 }
 
 export interface ReplyComment {

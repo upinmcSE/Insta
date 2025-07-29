@@ -5,7 +5,7 @@ export default [
     route("login", "routes/login.tsx"),
     route("register", "routes/register.tsx"),
     route("authentication", "routes/authentication.tsx"),
-    route("profile", "routes/profile.tsx"),
+    route("profile/:id", "routes/profile.tsx"),
     route("user", "routes/user.tsx"),
     route("search", "routes/search.tsx"),
     route("messages", "routes/chat.tsx"),
