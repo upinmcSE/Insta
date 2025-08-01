@@ -224,10 +224,7 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void verifyEmail(VerifyRequest request) {
-        log.info("email: {}", request.getEmail());
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-    }
+    public void verifyEmail(VerifyRequest request) {}
 
     @Override
     public void forgotPassword(ForgotPasswordRequest request) {

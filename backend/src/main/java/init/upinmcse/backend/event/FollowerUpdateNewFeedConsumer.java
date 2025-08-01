@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import init.upinmcse.backend.config.init.MessageQueueConfig;
 import init.upinmcse.backend.dto.event.PostCreatedEvent;
-import init.upinmcse.backend.repository.cache.impl.NewFeedRedis;
 import init.upinmcse.backend.repository.db.FollowerRepository;
-import init.upinmcse.backend.repository.db.PostRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class FollowerUpdateNewFeed {
+public class FollowerUpdateNewFeedConsumer {
 
     FollowerRepository followerRepository;
     RedisTemplate<String, Object> redisTemplate;

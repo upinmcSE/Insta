@@ -2,6 +2,7 @@ package init.upinmcse.backend.service.impl;
 
 import init.upinmcse.backend.config.init.MessageQueueConfig;
 import init.upinmcse.backend.dto.common.PageResponse;
+import init.upinmcse.backend.dto.event.LikePostEvent;
 import init.upinmcse.backend.dto.event.PostCreatedEvent;
 import init.upinmcse.backend.dto.request.PostRequest;
 import init.upinmcse.backend.dto.response.FileResponse;
@@ -92,7 +93,7 @@ public class PostService implements IPostService {
 
         rabbitTemplate.convertAndSend(
                 MessageQueueConfig.EXCHANGE,
-                MessageQueueConfig.ROUTING_KEY,
+                MessageQueueConfig.ROUTING_KEY_POST_CREATED,
                 event
         );
 
@@ -162,7 +163,6 @@ public class PostService implements IPostService {
                 .pageSize(pageData.getSize())
                 .totalPages(pageData.getTotalPages())
                 .totalElements(pageData.getTotalElements())
-                .totalPages(pageData.getTotalPages())
                 .data(postList)
                 .build();
     }
@@ -207,6 +207,21 @@ public class PostService implements IPostService {
                 .build();
 
         postLikeRepository.save(postLike);
+
+        if(userId.equals(post.getUser().getId())){
+            return;
+        }
+
+        LikePostEvent event = LikePostEvent.builder()
+                .senderId(userId)
+                .receiverId(post.getUser().getId())
+                .build();
+
+        rabbitTemplate.convertAndSend(
+                MessageQueueConfig.EXCHANGE,
+                MessageQueueConfig.ROUTING_KEY_POST_LIKE,
+                event
+        );
     }
 
     @Transactional
@@ -224,7 +239,7 @@ public class PostService implements IPostService {
             throw new ErrorException(ErrorCode.POST_NOT_LIKED);
         }
 
-        postLikeRepository.deleteByPostIdAndUserId(postId, user.getId());
+        postLikeRepository.deleteByPostIdAndUserId(post.getId(), user.getId());
 
     }
 }

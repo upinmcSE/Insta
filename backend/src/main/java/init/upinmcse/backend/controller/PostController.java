@@ -23,7 +23,7 @@ public class PostController {
     IPostService postService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    BaseResponse<PostResponse> createPost(
+    public BaseResponse<PostResponse> createPost(
             @RequestParam("file") List<MultipartFile> files,
             @ModelAttribute PostRequest postRequest
     ) {
@@ -34,7 +34,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    BaseResponse<PostResponse> getPost(@PathVariable Long postId) {
+    public BaseResponse<PostResponse> getPost(@PathVariable Long postId) {
         return BaseResponse.<PostResponse>builder()
                 .message("Post retrieved successfully")
                 .result(postService.getPostById(postId))
@@ -42,7 +42,7 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    BaseResponse<PageResponse<PostResponse>> getPostsByUser(@PathVariable String userId) {
+    public BaseResponse<PageResponse<PostResponse>> getPostsByUser(@PathVariable String userId) {
         return BaseResponse.<PageResponse<PostResponse>>builder()
                 .message("Posts retrieved successfully")
                 .result(postService.getPostsByUserId(userId, 1, 10))
@@ -50,7 +50,7 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    BaseResponse<Void> updatePost(
+    public BaseResponse<Void> updatePost(
             @PathVariable String postId,
             @RequestParam("file") List<MultipartFile> files,
             @ModelAttribute PostRequest postRequest
@@ -61,21 +61,21 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    BaseResponse<Void> deletePost(@PathVariable String postId) {
+    public BaseResponse<Void> deletePost(@PathVariable String postId) {
         return BaseResponse.<Void>builder()
                 .message("Post deleted successfully")
                 .build();
     }
 
     @DeleteMapping("/report/{postId}")
-    BaseResponse<Void> reportPost(@PathVariable String postId) {
+    public BaseResponse<Void> reportPost(@PathVariable String postId) {
         return BaseResponse.<Void>builder()
                 .message("Post reported successfully")
                 .build();
     }
 
     @PostMapping("/like/{postId}")
-    BaseResponse<Void> likePost(@PathVariable Long postId) {
+    public BaseResponse<Void> likePost(@PathVariable Long postId) {
         postService.likePost(postId);
         return BaseResponse.<Void>builder()
                 .message("Post liked successfully")
@@ -83,7 +83,7 @@ public class PostController {
     }
 
     @PostMapping("/unlike/{postId}")
-    BaseResponse<Void> unlikePost(@PathVariable Long postId) {
+    public BaseResponse<Void> unlikePost(@PathVariable Long postId) {
         postService.unlikePost(postId);
         return BaseResponse.<Void>builder()
                 .message("Post unliked successfully")

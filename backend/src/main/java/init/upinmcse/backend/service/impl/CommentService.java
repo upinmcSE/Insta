@@ -1,5 +1,7 @@
 package init.upinmcse.backend.service.impl;
 
+import init.upinmcse.backend.config.init.MessageQueueConfig;
+import init.upinmcse.backend.dto.event.CommentPostEvent;
 import init.upinmcse.backend.dto.request.CommentRequest;
 import init.upinmcse.backend.dto.request.ReplyCommentRequest;
 import init.upinmcse.backend.dto.response.CommentResponse;
@@ -18,6 +20,7 @@ import init.upinmcse.backend.service.ICommentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,7 @@ public class CommentService implements ICommentService {
     RepCommentRepository repCommentRepository;
     PostRepository postRepository;
     UserRepository userRepository;
+    RabbitTemplate rabbitTemplate;
 
     @Override
     public CommentResponse createComment(CommentRequest request) {
@@ -45,6 +49,19 @@ public class CommentService implements ICommentService {
                 .user(user)
                 .build();
         comment = commentRepository.save(comment);
+
+        if(!userId.equals(post.getUser().getId())) {
+            CommentPostEvent commentPostEvent = CommentPostEvent.builder()
+                    .senderId(userId)
+                    .receiverId(post.getUser().getId())
+                    .build();
+
+            rabbitTemplate.convertAndSend(
+                    MessageQueueConfig.EXCHANGE,
+                    MessageQueueConfig.ROUTING_KEY_POST_COMMENT,
+                    commentPostEvent
+            );
+        }
 
         return CommentResponse.builder()
                 .commentId(comment.getId())

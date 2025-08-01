@@ -31,6 +31,7 @@ public enum ErrorCode {
     REPLY_COMMENT_NOT_FOUND(4004, "Không tìm thấy bình luận trả lời", HttpStatus.NOT_FOUND),
     NOT_FETCH_FEED(4004, "Không thể lấy dữ liệu feed", HttpStatus.INTERNAL_SERVER_ERROR),
     CONVERSATION_NOT_FOUND(4004, "Không tìm thấy cuộc trò chuyện", HttpStatus.NOT_FOUND),
+    NOTIFICATION_NOT_FOUND(4004,"Không tìm thấy notification", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

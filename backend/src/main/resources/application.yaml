@@ -31,7 +31,7 @@ spring:
       max-request-size: 5MB
 
   datasource:
-    url: ${DBMS_CONNECTION:jdbc:jdbc:mysql://localhost:3306/insta}
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/insta}
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: ${DBMS_USERNAME:root}
     password: ${DBMS_PASSWORD:root}
@@ -68,8 +68,8 @@ spring:
 
 jwt:
   secretKey: ${JWT_SIGNERKEY}
-  accessExpiryMinutes: 60 # 60s
-  refreshExpiryMinutes: 3600 # 1h
+  accessExpiryMinutes: 7200
+  refreshExpiryMinutes: 72000
 
 app:
   file:

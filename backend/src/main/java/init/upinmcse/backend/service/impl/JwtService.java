@@ -35,16 +35,16 @@ public class JwtService implements IJwtService {
     UserRepository userRepository;
     TokenRevokedRepository tokenRevokedRepository;
 
-    @NonFinal
     @Value("${jwt.secretKey}")
+    @NonFinal
     String SIGNER_KEY;
 
-    @NonFinal
     @Value("${jwt.accessExpiryMinutes}")
+    @NonFinal
     long ACCESS_EXPIRY_SECONDS;
 
-    @NonFinal
     @Value("${jwt.refreshExpiryMinutes}")
+    @NonFinal
     long REFRESH_EXPIRY_SECONDS;
 
     @Override

@@ -23,10 +23,10 @@ public class FileController {
     IFileService fileService;
 
     @GetMapping("/media/download/{fileName}")
-    ResponseEntity<Resource> downloadMedia(@PathVariable String fileName) throws IOException, IOException {
+    public ResponseEntity<Resource> downloadMedia(@PathVariable String fileName) throws IOException {
         var fileData = fileService.download(fileName);
 
-        return ResponseEntity.<Resource>ok()
+        return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, fileData.contentType())
                 .body(fileData.resource());
     }

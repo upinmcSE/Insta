@@ -5,6 +5,7 @@ import init.upinmcse.backend.constant.NotificationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
@@ -13,11 +14,12 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "tb_notification")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Notification extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    int id;
 
     @ManyToOne
     @JoinColumn(name = "from_user_id", nullable = false)
@@ -31,10 +33,9 @@ public class Notification extends BaseEntity{
     @Enumerated(EnumType.STRING)
     NotificationType notificationType;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    @JsonIgnore
-    private Post post;
+    String content;
+
+    boolean isRead = false;
 
 
 }

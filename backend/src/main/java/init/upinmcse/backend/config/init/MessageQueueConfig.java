@@ -14,11 +14,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MessageQueueConfig {
     public static final String EXCHANGE = "post.exchange";
-    public static final String ROUTING_KEY = "post.created";
+
+    public static final String ROUTING_KEY_POST_CREATED = "post.created";
+    public static final String ROUTING_KEY_POST_LIKE = "post.like";
+    public static final String ROUTING_KEY_POST_COMMENT = "post.comment";
 
     public static final String POST_FEED_QUEUE = "post.feed.queue";
     public static final String POST_NOTIFICATION_QUEUE = "post.notification.queue";
     public static final String POST_FOLLOWERS_FEED_QUEUE = "post.followers-feed.queue";
+
+    public static final String POST_LIKE_QUEUE = "post.like.queue";
+    public static final String POST_COMMENT_QUEUE = "post.comment.queue";
 
     @Bean
     public TopicExchange postExchange() {
@@ -52,7 +58,25 @@ public class MessageQueueConfig {
 
     @Bean
     public Binding followersFeedBinding() {
-        return BindingBuilder.bind(postFollowersFeedQueue()).to(postExchange()).with(ROUTING_KEY);
+        return BindingBuilder.bind(postFollowersFeedQueue()).to(postExchange()).with(ROUTING_KEY_POST_CREATED);
+    }
+
+    @Bean
+    public Queue postLikeQueue() {
+        return new Queue(POST_LIKE_QUEUE);
+    }
+
+    @Bean Binding postLikeBinding() {
+        return BindingBuilder.bind(postLikeQueue()).to(postExchange()).with(ROUTING_KEY_POST_LIKE);
+    }
+
+    @Bean Queue postCommentQueue() {
+        return new Queue(POST_COMMENT_QUEUE);
+    }
+
+    @Bean
+    public Binding postCommentBinding() {
+        return BindingBuilder.bind(postCommentQueue()).to(postExchange()).with(ROUTING_KEY_POST_COMMENT);
     }
 
     @Bean
